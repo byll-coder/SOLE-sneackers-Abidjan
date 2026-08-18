@@ -2,7 +2,7 @@
 const API_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5001/api"
+    ? "https://sole-sneackers-abidjan.onrender.com/api"
     : "/api";
 
 // ── Helper fetch ──────────────────────────────────
