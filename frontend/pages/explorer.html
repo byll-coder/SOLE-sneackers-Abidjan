@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explorer — SOLE</title>
+    <link rel="icon" type="image/svg+xml" href="../frontend/logo/logo.jpeg" />
+    <link rel="alternate icon" href="../frontend/logo/logo.jpeg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      .page-hero {
+        padding: 120px 0 50px;
+        background: linear-gradient(
+          to bottom,
+          var(--dark) 0%,
+          var(--black) 100%
+        );
+        border-bottom: 1px solid var(--glass-bd);
+        position: relative;
+        z-index: 1;
+      }
+      .page-title {
+        font-family: var(--font-display);
+        font-size: clamp(3rem, 7vw, 6rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        line-height: 0.95;
+      }
+      .page-title em {
+        color: var(--red);
+        font-style: normal;
+      }
+
+      /* Search hero */
+      .search-hero {
+        margin-top: 28px;
+      }
+      .search-hero-box {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd2);
+        border-radius: var(--r-pill);
+        padding: 6px 6px 6px 22px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+        max-width: 720px;
+      }
+      .search-hero-box i {
+        color: var(--red);
+        font-size: 1.1rem;
+        margin-right: 8px;
+        flex-shrink: 0;
+      }
+      .search-hero-box input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        font-family: var(--font-body);
+        font-size: 1rem;
+        color: var(--white);
+        padding: 10px 0;
+      }
+      .search-hero-box input::placeholder {
+        color: var(--txt3);
+      }
+
+      /* Onglets */
+      .explore-tabs {
+        display: flex;
+        gap: 6px;
+        margin: 36px 0 28px;
+        flex-wrap: wrap;
+      }
+      .explore-tab {
+        font-family: var(--font-ui);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 10px 22px;
+        border-radius: var(--r-pill);
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        color: var(--txt2);
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .explore-tab:hover {
+        border-color: var(--red);
+        color: var(--red);
+      }
+      .explore-tab.active {
+        background: var(--red);
+        border-color: var(--red);
+        color: var(--white);
+      }
+
+      /* Filtres latéraux */
+      .explore-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 28px;
+        align-items: start;
+      }
+      .filters-sidebar {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        padding: 24px;
+        position: sticky;
+        top: 90px;
+      }
+      .filter-title {
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .filter-section {
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--glass-bd);
+      }
+      .filter-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .filter-label {
+        font-family: var(--font-ui);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--txt2);
+        margin-bottom: 12px;
+        display: block;
+      }
+      .filter-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .filter-chip {
+        font-family: var(--font-ui);
+        font-size: 0.76rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: var(--r-pill);
+        background: var(--dark3);
+        border: 1px solid var(--glass-bd);
+        color: var(--txt2);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .filter-chip:hover,
+      .filter-chip.active {
+        background: var(--red-pale);
+        border-color: rgba(229, 9, 20, 0.4);
+        color: var(--red);
+      }
+      .filter-clear {
+        font-size: 0.76rem;
+        color: var(--txt3);
+        text-decoration: underline;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: var(--font-body);
+        padding: 0;
+        margin-top: 4px;
+      }
+      .filter-clear:hover {
+        color: var(--red);
+      }
+
+      /* Résultats */
+      .results-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .results-count {
+        font-size: 0.88rem;
+        color: var(--txt2);
+      }
+      .results-count strong {
+        color: var(--red);
+        font-family: var(--font-ui);
+      }
+      .sort-select {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-pill);
+        padding: 8px 32px 8px 14px;
+        color: var(--txt2);
+        font-family: var(--font-body);
+        font-size: 0.82rem;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+      }
+
+      /* Empty / Error */
+      .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        grid-column: 1/-1;
+      }
+      .empty-state i {
+        font-size: 3.5rem;
+        color: var(--txt3);
+        display: block;
+        margin-bottom: 20px;
+      }
+      .empty-state h3 {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 10px;
+      }
+      .empty-state p {
+        color: var(--txt2);
+        font-size: 0.9rem;
+      }
+
+      /* Quartiers hero */
+      .quartiers-hero {
+        margin-top: 20px;
+      }
+      .quartiers-row {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .quartiers-row::-webkit-scrollbar {
+        display: none;
+      }
+      .quartier-btn {
+        flex-shrink: 0;
+        font-family: var(--font-ui);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 9px 18px;
+        border-radius: var(--r-pill);
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        color: var(--txt2);
+        cursor: pointer;
+        transition: all 0.18s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .quartier-btn:hover,
+      .quartier-btn.active {
+        background: var(--red-pale);
+        border-color: rgba(229, 9, 20, 0.4);
+        color: var(--red);
+      }
+
+      @media (max-width: 900px) {
+        .explore-layout {
+          grid-template-columns: 1fr;
+        }
+        .filters-sidebar {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="toast" id="global-toast"></div>
+
+    <nav class="navbar scrolled" id="navbar">
+      <a href="/index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
+      <ul class="navbar-links">
+        <li><a href="/index.html">Accueil</a></li>
+        <li><a href="/pages/boutiques.html">Boutiques</a></li>
+        <li><a href="/pages/explorer.html" class="active">Explorer</a></li>
+        <li>
+          <a href="/pages/messages.html"
+            ><i class="ti ti-message-circle"></i> Messages</a
+          >
+        </li>
+      </ul>
+      <div class="navbar-actions" id="navbar-actions"></div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="/index.html"><i class="ti ti-home"></i> Accueil</a>
+      <a href="/pages/boutiques.html"
+        ><i class="ti ti-building-store"></i> Boutiques</a
+      >
+      <a href="/pages/explorer.html" class="active"
+        ><i class="ti ti-compass"></i> Explorer</a
+      >
+      <a href="/pages/messages.html"
+        ><i class="ti ti-message-circle"></i> Messages</a
+      >
+      <a href="/pages/auth.html?mode=connexion"
+        ><i class="ti ti-login"></i> Connexion</a
+      >
+    </div>
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="container relative">
+        <div class="section-eyebrow fade-up">
+          <i class="ti ti-compass"></i> Exploration
+        </div>
+        <h1 class="page-title fade-up delay-1">Explorer<em>Abidjan.</em></h1>
+
+        <div class="search-hero fade-up delay-2">
+          <div class="search-hero-box">
+            <i class="ti ti-search"></i>
+            <input
+              type="text"
+              id="search-q"
+              placeholder="Recherche une boutique par nom, quartier..."
+              oninput="onSearch()"
+            />
+            <button
+              class="btn btn-red"
+              style="border-radius: var(--r-pill); flex-shrink: 0"
+              onclick="lancerRecherche()"
+            >
+              <i class="ti ti-arrow-right"></i> Chercher
+            </button>
+          </div>
+        </div>
+
+        <!-- Quartiers rapides -->
+        <div class="quartiers-hero fade-up delay-3">
+          <div class="quartiers-row" id="quartiers-row">
+            <div
+              class="spinner"
+              style="margin: 0; width: 20px; height: 20px"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ONGLETS -->
+    <div
+      style="
+        background: var(--black);
+        border-bottom: 1px solid var(--glass-bd);
+        position: sticky;
+        top: 70px;
+        z-index: 100;
+        padding: 0;
+      "
+    >
+      <div class="container">
+        <div class="explore-tabs">
+          <button
+            class="explore-tab active"
+            id="tab-boutiques"
+            onclick="setTab('boutiques')"
+          >
+            <i class="ti ti-building-store"></i> Boutiques
+          </button>
+          <button
+            class="explore-tab"
+            id="tab-premium"
+            onclick="setTab('premium')"
+          >
+            <i class="ti ti-crown"></i> Premium
+          </button>
+          <button class="explore-tab" id="tab-notes" onclick="setTab('notes')">
+            <i class="ti ti-star-filled"></i> Mieux notées
+          </button>
+          <button
+            class="explore-tab"
+            id="tab-recentes"
+            onclick="setTab('recentes')"
+          >
+            <i class="ti ti-clock"></i> Nouvelles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENU PRINCIPAL -->
+    <section class="section" style="padding-top: 40px">
+      <div class="container">
+        <div class="explore-layout">
+          <!-- FILTRES -->
+          <aside class="filters-sidebar rv">
+            <div class="filter-title">
+              <i class="ti ti-adjustments-horizontal"></i> Filtres
+            </div>
+
+            <div class="filter-section">
+              <span class="filter-label">Quartier</span>
+              <div class="filter-chips" id="filter-quartiers">
+                <div
+                  class="spinner"
+                  style="margin: 0; width: 20px; height: 20px"
+                ></div>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <span class="filter-label">Statut</span>
+              <div class="filter-chips">
+                <div
+                  class="filter-chip"
+                  id="f-ouvert"
+                  onclick="toggleStatut('ouvert')"
+                >
+                  <i class="ti ti-clock"></i> Ouvert maintenant
+                </div>
+                <div
+                  class="filter-chip"
+                  id="f-verifie"
+                  onclick="toggleStatut('verifie')"
+                >
+                  <i class="ti ti-shield-check"></i> Vérifié
+                </div>
+                <div
+                  class="filter-chip"
+                  id="f-premium"
+                  onclick="toggleStatut('premium')"
+                >
+                  <i class="ti ti-crown"></i> Premium
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <span class="filter-label">Trier par</span>
+              <div class="filter-chips">
+                <div
+                  class="filter-chip active"
+                  id="tri-recent"
+                  onclick="setTri('recent')"
+                >
+                  Plus récentes
+                </div>
+                <div class="filter-chip" id="tri-note" onclick="setTri('note')">
+                  Mieux notées
+                </div>
+                <div class="filter-chip" id="tri-vues" onclick="setTri('vues')">
+                  Plus vues
+                </div>
+                <div
+                  class="filter-chip"
+                  id="tri-followers"
+                  onclick="setTri('followers')"
+                >
+                  Plus suivies
+                </div>
+              </div>
+            </div>
+
+            <button class="filter-clear" onclick="toutReinitialiser()">
+              <i class="ti ti-x"></i> Réinitialiser les filtres
+            </button>
+          </aside>
+
+          <!-- RÉSULTATS -->
+          <div>
+            <div class="results-header">
+              <p class="results-count" id="count-txt"></p>
+              <select
+                class="sort-select"
+                id="sort-select"
+                onchange="setTri(this.value)"
+              >
+                <option value="recent">Plus récentes</option>
+                <option value="note">Mieux notées</option>
+                <option value="vues">Plus vues</option>
+                <option value="followers">Plus suivies</option>
+              </select>
+            </div>
+            <div class="stores-grid" id="results-grid">
+              <div class="spinner"></div>
+            </div>
+            <div class="pagination" id="pagination"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-bottom">
+          <span>© 2025 SOLE Sneakers CI</span>
+          <a
+            href="/index.html"
+            style="
+              color: var(--red);
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            "
+            ><i class="ti ti-arrow-left"></i> Accueil</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      let searchTimer = null;
+      let filtres = {
+        q: "",
+        quartier: "",
+        tri: "recent",
+        premium: false,
+        verifie: false,
+      };
+      let tabActif = "boutiques";
+
+      function onSearch() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+          filtres.q = document.getElementById("search-q").value.trim();
+          charger(1);
+        }, 380);
+      }
+
+      function lancerRecherche() {
+        filtres.q = document.getElementById("search-q").value.trim();
+        charger(1);
+      }
+
+      function setTab(tab) {
+        tabActif = tab;
+        document
+          .querySelectorAll(".explore-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById("tab-" + tab)?.classList.add("active");
+        filtres.premium = tab === "premium";
+        filtres.tri =
+          tab === "notes"
+            ? "note"
+            : tab === "recentes"
+              ? "recent"
+              : filtres.tri;
+        charger(1);
+      }
+
+      function setTri(tri) {
+        filtres.tri = tri;
+        document
+          .querySelectorAll('[id^="tri-"]')
+          .forEach((c) => c.classList.remove("active"));
+        document.getElementById("tri-" + tri)?.classList.add("active");
+        document.getElementById("sort-select").value = tri;
+        charger(1);
+      }
+
+      function setQuartier(q) {
+        filtres.quartier = filtres.quartier === q ? "" : q;
+        document
+          .querySelectorAll(".filter-chip[data-quartier]")
+          .forEach((c) =>
+            c.classList.toggle(
+              "active",
+              c.dataset.quartier === filtres.quartier,
+            ),
+          );
+        document
+          .querySelectorAll(".quartier-btn")
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.q === filtres.quartier),
+          );
+        charger(1);
+      }
+
+      let statutActif = {};
+      function toggleStatut(s) {
+        statutActif[s] = !statutActif[s];
+        document
+          .getElementById("f-" + s)
+          ?.classList.toggle("active", statutActif[s]);
+        if (s === "premium") filtres.premium = statutActif[s];
+        charger(1);
+      }
+
+      async function chargerQuartiers() {
+        try {
+          const { data } = await Stores.quartiers();
+          const row = document.getElementById("quartiers-row");
+          const fq = document.getElementById("filter-quartiers");
+          row.innerHTML = data
+            .map(
+              (q) =>
+                `<button class="quartier-btn" data-q="${q}" onclick="setQuartier('${q}')"><i class="ti ti-map-pin"></i>${q}</button>`,
+            )
+            .join("");
+          fq.innerHTML = data
+            .map(
+              (q) =>
+                `<div class="filter-chip" data-quartier="${q}" onclick="setQuartier('${q}')">${q}</div>`,
+            )
+            .join("");
+          const p = new URLSearchParams(window.location.search);
+          if (p.get("quartier")) setQuartier(p.get("quartier"));
+        } catch {}
+      }
+
+      async function charger(page = 1) {
+        const grid = document.getElementById("results-grid");
+        grid.innerHTML = '<div class="spinner"></div>';
+        const params = { page, limit: 12, tri: filtres.tri };
+        if (filtres.q) params.q = filtres.q;
+        if (filtres.quartier) params.quartier = filtres.quartier;
+        if (filtres.premium) params.premium = "true";
+        try {
+          const { data, total, pages } = await Stores.liste(params);
+          document.getElementById("count-txt").innerHTML =
+            `<strong>${total}</strong> boutique${total > 1 ? "s" : ""} trouvée${total > 1 ? "s" : ""}`;
+          grid.innerHTML = data.length
+            ? data.map(renderStoreCard).join("")
+            : `<div class="empty-state"><i class="ti ti-search-off"></i><h3>Aucune boutique</h3><p>Essaie d'autres filtres.</p></div>`;
+          grid
+            .querySelectorAll(".rv:not(.visible)")
+            .forEach((el) => rvObs.observe(el));
+          renderPagination("pagination", page, pages, (p) => charger(p));
+        } catch (err) {
+          grid.innerHTML = `<div class="empty-state"><i class="ti ti-alert-triangle"></i><h3>Erreur</h3><p>${err.message}</p></div>`;
+        }
+      }
+
+      function toutReinitialiser() {
+        filtres = {
+          q: "",
+          quartier: "",
+          tri: "recent",
+          premium: false,
+          verifie: false,
+        };
+        statutActif = {};
+        document.getElementById("search-q").value = "";
+        document.getElementById("sort-select").value = "recent";
+        document
+          .querySelectorAll(".filter-chip,.quartier-btn,.explore-tab")
+          .forEach((c) => c.classList.remove("active"));
+        document.getElementById("tab-boutiques")?.classList.add("active");
+        document.getElementById("tri-recent")?.classList.add("active");
+        charger(1);
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const p = new URLSearchParams(window.location.search);
+        if (p.get("q")) {
+          filtres.q = p.get("q");
+          document.getElementById("search-q").value = p.get("q");
+        }
+        await chargerQuartiers();
+        charger(1);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sneaker — SOLE</title>
+    <link rel="icon" type="image/svg+xml" href="../frontend/logo/logo.jpeg" />
+    <link rel="alternate icon" href="../frontend/logo/logo.jpeg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      .product-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: start;
+        padding: 120px 0 80px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── GALERIE ── */
+      .product-gallery {
+        position: sticky;
+        top: 90px;
+      }
+      .gallery-main {
+        aspect-ratio: 1;
+        border-radius: var(--r-lg);
+        overflow: hidden;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        margin-bottom: 12px;
+        position: relative;
+      }
+      .gallery-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+      .gallery-main img:hover {
+        transform: scale(1.04);
+      }
+      .gallery-main-ph {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .gallery-main-ph i {
+        font-size: 5rem;
+        color: var(--txt3);
+      }
+      .gallery-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        font-family: var(--font-ui);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 5px 12px;
+        border-radius: var(--r-pill);
+        background: var(--red);
+        color: var(--white);
+      }
+      .gallery-thumbs {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .gallery-thumb {
+        width: 72px;
+        height: 72px;
+        border-radius: var(--r-sm);
+        overflow: hidden;
+        background: var(--dark2);
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: border-color 0.18s;
+        flex-shrink: 0;
+      }
+      .gallery-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .gallery-thumb.active {
+        border-color: var(--red);
+      }
+      .gallery-thumb-ph {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .gallery-thumb-ph i {
+        font-size: 1.4rem;
+        color: var(--txt3);
+      }
+
+      /* ── INFOS PRODUIT ── */
+      .product-info {
+      }
+      .product-brand {
+        font-family: var(--font-ui);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .product-name {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--white);
+        line-height: 1;
+        margin-bottom: 16px;
+      }
+      .product-price-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .product-price {
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        letter-spacing: 0.04em;
+        color: var(--white);
+      }
+      .product-price-old {
+        font-size: 1rem;
+        color: var(--txt3);
+        text-decoration: line-through;
+      }
+      .product-promo {
+        font-family: var(--font-ui);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        background: rgba(255, 179, 0, 0.15);
+        color: var(--warning);
+        border: 1px solid rgba(255, 179, 0, 0.25);
+        padding: 4px 10px;
+        border-radius: var(--r-pill);
+      }
+
+      .product-divider {
+        height: 1px;
+        background: var(--glass-bd);
+        margin: 20px 0;
+      }
+
+      .info-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .info-chip {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.84rem;
+        color: var(--txt2);
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        padding: 8px 14px;
+        border-radius: var(--r-pill);
+      }
+      .info-chip i {
+        color: var(--red);
+        font-size: 0.9rem;
+      }
+      .info-chip strong {
+        color: var(--white);
+      }
+
+      /* Tailles */
+      .tailles-label {
+        font-family: var(--font-ui);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--txt2);
+        margin-bottom: 12px;
+        display: block;
+      }
+      .tailles-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+      .taille-btn {
+        font-family: var(--font-ui);
+        font-size: 0.88rem;
+        font-weight: 700;
+        min-width: 48px;
+        height: 48px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-sm);
+        color: var(--txt2);
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .taille-btn:hover {
+        border-color: var(--red);
+        color: var(--red);
+      }
+      .taille-btn.active {
+        background: var(--red);
+        border-color: var(--red);
+        color: var(--white);
+      }
+      .taille-btn.indispo {
+        opacity: 0.3;
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
+
+      /* Description */
+      .product-desc {
+        font-size: 0.92rem;
+        color: var(--txt2);
+        line-height: 1.75;
+        font-weight: 300;
+        margin-bottom: 24px;
+      }
+
+      /* Actions */
+      .product-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+      .action-row {
+        display: flex;
+        gap: 10px;
+      }
+
+      /* Store mini-card */
+      .store-mini {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      .store-mini:hover {
+        border-color: rgba(229, 9, 20, 0.3);
+      }
+      .store-mini-logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: var(--dark3);
+        flex-shrink: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--glass-bd);
+      }
+      .store-mini-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .store-mini-logo i {
+        font-size: 1.3rem;
+        color: var(--txt3);
+      }
+      .store-mini-name {
+        font-weight: 700;
+        font-size: 0.96rem;
+        color: var(--white);
+        margin-bottom: 4px;
+      }
+      .store-mini-meta {
+        font-size: 0.78rem;
+        color: var(--txt2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .store-mini-meta i {
+        font-size: 0.85rem;
+        color: var(--red);
+      }
+      .store-mini-arrow {
+        margin-left: auto;
+        color: var(--txt3);
+      }
+
+      /* Produits similaires */
+      .similar-section {
+        padding: 60px 0;
+        border-top: 1px solid var(--glass-bd);
+        position: relative;
+        z-index: 1;
+      }
+
+      @media (max-width: 900px) {
+        .product-layout {
+          grid-template-columns: 1fr;
+          padding: 100px 0 60px;
+        }
+        .product-gallery {
+          position: static;
+        }
+        .gallery-thumbs {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="toast" id="global-toast"></div>
+
+    <nav class="navbar scrolled" id="navbar">
+      <a href="/index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
+      <ul class="navbar-links">
+        <li><a href="/index.html">Accueil</a></li>
+        <li><a href="/pages/boutiques.html">Boutiques</a></li>
+        <li><a href="/pages/explorer.html">Explorer</a></li>
+        <li>
+          <a href="/pages/messages.html"
+            ><i class="ti ti-message-circle"></i> Messages</a
+          >
+        </li>
+      </ul>
+      <div class="navbar-actions" id="navbar-actions"></div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="/index.html"><i class="ti ti-home"></i> Accueil</a>
+      <a href="/pages/boutiques.html"
+        ><i class="ti ti-building-store"></i> Boutiques</a
+      >
+      <a href="/pages/explorer.html"><i class="ti ti-compass"></i> Explorer</a>
+      <a href="/pages/messages.html"
+        ><i class="ti ti-message-circle"></i> Messages</a
+      >
+    </div>
+
+    <!-- BREADCRUMB -->
+    <div
+      style="
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        z-index: 90;
+        padding: 10px 0;
+        background: rgba(8, 8, 8, 0.85);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--glass-bd);
+      "
+    >
+      <div class="container">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--txt3);
+          "
+        >
+          <a
+            href="/index.html"
+            style="color: var(--txt3); transition: color 0.15s"
+            onmouseover="this.style.color = 'var(--red)'"
+            onmouseout="this.style.color = 'var(--txt3)'"
+            >Accueil</a
+          >
+          <i class="ti ti-chevron-right" style="font-size: 0.7rem"></i>
+          <a
+            href="/pages/boutiques.html"
+            style="color: var(--txt3); transition: color 0.15s"
+            onmouseover="this.style.color = 'var(--red)'"
+            onmouseout="this.style.color = 'var(--txt3)'"
+            >Boutiques</a
+          >
+          <i class="ti ti-chevron-right" style="font-size: 0.7rem"></i>
+          <span id="breadcrumb-store" style="color: var(--txt2)">Boutique</span>
+          <i class="ti ti-chevron-right" style="font-size: 0.7rem"></i>
+          <span id="breadcrumb-product" style="color: var(--white)"
+            >Produit</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div id="page-content">
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 80vh;
+        "
+      >
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      const productId = new URLSearchParams(window.location.search).get("id");
+      if (!productId) window.location.href = "/pages/boutiques.html";
+
+      let produitActuel = null;
+      let imageActuelle = 0;
+
+      function changerImage(idx) {
+        imageActuelle = idx;
+        const imgs = produitActuel?.images || [];
+        const mainImg = document.getElementById("main-img");
+        if (mainImg && imgs[idx]) mainImg.src = imgs[idx];
+        document
+          .querySelectorAll(".gallery-thumb")
+          .forEach((t, i) => t.classList.toggle("active", i === idx));
+      }
+
+      function selectionnerTaille(taille, btn) {
+        document
+          .querySelectorAll(".taille-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      async function toggleFavori(btn) {
+        if (!Session.estConnecte()) {
+          afficherToast("Connecte-toi pour ajouter aux favoris", "error");
+          return;
+        }
+        try {
+          const Fav = window.Favorites || null;
+          if (!Fav) {
+            afficherToast("Fonctionnalité non disponible", "error");
+            return;
+          }
+          const { action } = (await Fav.toggleProduct)
+            ? Fav.toggleProduct(productId)
+            : Promise.reject();
+          btn.innerHTML =
+            action === "ajouté"
+              ? '<i class="ti ti-heart-filled"></i> Sauvegardé'
+              : '<i class="ti ti-heart"></i> Sauvegarder';
+          afficherToast(
+            action === "ajouté" ? "Sauvegardé !" : "Retiré des favoris",
+            "success",
+          );
+        } catch {
+          afficherToast("Connecte-toi d'abord", "error");
+        }
+      }
+
+      async function chargerProduit() {
+        try {
+          const { data: p } = await apiFetch(`/products/${productId}`);
+          produitActuel = p;
+
+          document.title = `${p.nom} — SOLE`;
+          document.getElementById("breadcrumb-product").textContent = p.nom;
+          document.getElementById("breadcrumb-store").textContent =
+            p.store?.nom || "Boutique";
+
+          const images = p.images?.length ? p.images : [];
+          const prixFormate = Number(p.prix).toLocaleString("fr");
+          const ancienPrix = p.prixOriginal
+            ? Number(p.prixOriginal).toLocaleString("fr")
+            : null;
+          const remise = p.remise > 0 ? p.remise : null;
+
+          document.getElementById("page-content").innerHTML = `
+          <div class="container">
+            <div class="product-layout">
+
+              <!-- GALERIE -->
+              <div class="product-gallery">
+                <div class="gallery-main">
+                  ${
+                    images.length
+                      ? `<img src="${images[0]}" alt="${p.nom}" id="main-img">`
+                      : `<div class="gallery-main-ph"><i class="ti ti-shoe"></i></div>`
+                  }
+                  ${p.etat === "neuf" ? '<span class="gallery-badge"><i class="ti ti-sparkles"></i> Neuf</span>' : ""}
+                  ${remise ? `<span class="gallery-badge" style="left:auto;right:16px;background:var(--warning);color:var(--black);">-${remise}%</span>` : ""}
+                </div>
+                <div class="gallery-thumbs">
+                  ${images
+                    .map(
+                      (img, i) => `
+                    <div class="gallery-thumb ${i === 0 ? "active" : ""}" onclick="changerImage(${i})">
+                      <img src="${img}" alt="photo ${i + 1}">
+                    </div>`,
+                    )
+                    .join("")}
+                  ${
+                    !images.length
+                      ? `
+                    <div class="gallery-thumb active"><div class="gallery-thumb-ph"><i class="ti ti-shoe"></i></div></div>
+                    <div class="gallery-thumb"><div class="gallery-thumb-ph"><i class="ti ti-camera"></i></div></div>
+                    <div class="gallery-thumb"><div class="gallery-thumb-ph"><i class="ti ti-camera"></i></div></div>`
+                      : ""
+                  }
+                </div>
+              </div>
+
+              <!-- INFOS -->
+              <div class="product-info">
+                <div class="product-brand">
+                  <i class="ti ti-tag"></i> ${p.marqueNom || p.marque?.nom || "Marque"}
+                </div>
+                <h1 class="product-name">${p.nom}</h1>
+
+                <div class="product-price-row">
+                  <span class="product-price">${prixFormate} F</span>
+                  ${ancienPrix ? `<span class="product-price-old">${ancienPrix} F</span>` : ""}
+                  ${remise ? `<span class="product-promo">-${remise}% OFF</span>` : ""}
+                </div>
+
+                <div class="info-row">
+                  ${p.couleur ? `<span class="info-chip"><i class="ti ti-palette"></i> Couleur : <strong>${p.couleur}</strong></span>` : ""}
+                  <span class="info-chip"><i class="ti ti-${p.genre === "homme" ? "man" : p.genre === "femme" ? "woman" : "users"}"></i> <strong>${p.genre || "Unisexe"}</strong></span>
+                  <span class="info-chip"><i class="ti ti-category"></i> <strong>${p.categorie || "Sneakers"}</strong></span>
+                  <span class="info-chip"><i class="ti ti-${p.etat === "neuf" ? "sparkles" : "recycle"}"></i> <strong>${p.etat === "neuf" ? "Neuf" : p.etat === "occasion" ? "Occasion" : "Neuf sans boîte"}</strong></span>
+                </div>
+
+                <div class="product-divider"></div>
+
+                ${
+                  p.tailles?.length
+                    ? `
+                <span class="tailles-label">Tailles disponibles</span>
+                <div class="tailles-grid">
+                  ${p.tailles.map((t) => `<button class="taille-btn" onclick="selectionnerTaille('${t}', this)">${t}</button>`).join("")}
+                </div>`
+                    : ""
+                }
+
+                ${p.description ? `<p class="product-desc">${p.description}</p>` : ""}
+
+                <div class="product-divider"></div>
+
+                <!-- Actions -->
+                <div class="product-actions">
+                  <div class="action-row">
+                    <button class="btn btn-red btn-lg" style="flex:1;justify-content:center;"
+                      onclick="contacterStore('${p.store?._id}', '${p.store?.proprietaire || p.vendeur}')">
+                      <i class="ti ti-message-circle"></i> Contacter la boutique
+                    </button>
+                    <button class="btn btn-glass btn-lg" id="btn-favori" onclick="toggleFavori(this)">
+                      <i class="ti ti-heart"></i>
+                    </button>
+                  </div>
+                  <a href="/pages/boutique-detail.html?id=${p.store?._id}" class="btn btn-outline" style="justify-content:center;">
+                    <i class="ti ti-building-store"></i> Voir la boutique
+                  </a>
+                </div>
+
+                <!-- Info stock -->
+                ${
+                  p.stock > 0
+                    ? `<div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--success);"><i class="ti ti-circle-check"></i> En stock (${p.stock} disponible${p.stock > 1 ? "s" : ""})</div>`
+                    : `<div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--error);"><i class="ti ti-circle-x"></i> Rupture de stock</div>`
+                }
+
+                <div class="product-divider"></div>
+
+                <!-- Boutique -->
+                <div style="font-family:var(--font-ui);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--txt2);margin-bottom:12px;">
+                  <i class="ti ti-building-store" style="color:var(--red);"></i> Vendu par
+                </div>
+                <div class="store-mini" onclick="window.location.href='/pages/boutique-detail.html?id=${p.store?._id}'">
+                  ${
+                    p.store?.logo
+                      ? `<div class="store-mini-logo"><img src="${p.store.logo}" alt="${p.store.nom}"></div>`
+                      : `<div class="store-mini-logo"><i class="ti ti-building-store"></i></div>`
+                  }
+                  <div style="flex:1;">
+                    <div class="store-mini-name">${p.store?.nom || "Boutique"}</div>
+                    <div class="store-mini-meta">
+                      <span><i class="ti ti-map-pin"></i>${p.store?.quartier || "—"}</span>
+                      ${p.store?.isVerifie ? '<span style="color:var(--success);"><i class="ti ti-shield-check"></i> Vérifié</span>' : ""}
+                      ${p.store?.noteGlobale > 0 ? `<span>${renderStars(p.store.noteGlobale)} ${p.store.noteGlobale.toFixed(1)}</span>` : ""}
+                    </div>
+                  </div>
+                  <i class="ti ti-arrow-right store-mini-arrow"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SIMILAIRES -->
+          <div class="similar-section">
+            <div class="container">
+              <div class="section-header rv" style="margin-bottom:32px;">
+                <div class="section-eyebrow">Découvrir aussi</div>
+                <h2 class="section-title">Produits <em>similaires</em></h2>
+              </div>
+              <div id="similaires-grid" class="stores-grid"><div class="spinner"></div></div>
+            </div>
+          </div>
+
+          <div style="padding:0 0 40px;">
+            <div class="container">
+              <div class="footer-bottom" style="border-top:1px solid var(--glass-bd);padding-top:24px;">
+                <span>© 2025 SOLE Sneakers CI</span>
+                <a href="/pages/boutiques.html" style="color:var(--red);display:flex;align-items:center;gap:6px;">
+                  <i class="ti ti-arrow-left"></i> Retour aux boutiques
+                </a>
+              </div>
+            </div>
+          </div>`;
+
+          chargerSimilaires(p.store?._id, p.marque?._id || p.marque);
+          document.querySelectorAll(".rv").forEach((el) => rvObs.observe(el));
+        } catch (err) {
+          document.getElementById("page-content").innerHTML = `
+          <div style="text-align:center;padding:180px 24px;">
+            <i class="ti ti-shoe" style="font-size:4rem;color:var(--txt3);display:block;margin-bottom:20px;"></i>
+            <h2 style="font-family:var(--font-display);font-size:3rem;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:10px;">Produit introuvable</h2>
+            <p style="color:var(--txt2);margin-bottom:28px;">${err.message}</p>
+            <a href="/pages/boutiques.html" class="btn btn-red"><i class="ti ti-arrow-left"></i> Retour</a>
+          </div>`;
+        }
+      }
+
+      async function chargerSimilaires(storeId, marqueId) {
+        const el = document.getElementById("similaires-grid");
+        if (!el) return;
+        try {
+          const params = storeId
+            ? `/products/store/${storeId}?limit=4`
+            : `/products?limit=4`;
+          const { data } = await apiFetch(params);
+          const filtres = data.filter((p) => p._id !== productId).slice(0, 3);
+          if (!filtres.length) {
+            el.innerHTML =
+              '<p style="color:var(--txt3);">Aucun produit similaire pour l\'instant.</p>';
+            return;
+          }
+          el.innerHTML = filtres
+            .map((p) => {
+              const prix = Number(p.prix).toLocaleString("fr");
+              return `<article class="store-card rv" onclick="window.location.href='/pages/sneaker-detail.html?id=${p._id}'">
+            ${
+              p.images?.[0]
+                ? `<img src="${p.images[0]}" class="store-card-cover" alt="${p.nom}" style="object-fit:cover;">`
+                : `<div class="store-card-cover-ph"><i class="ti ti-shoe"></i></div>`
+            }
+            <div class="store-card-body">
+              <div class="store-card-header" style="margin-bottom:8px;">
+                <div>
+                  <div style="font-family:var(--font-ui);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:3px;">${p.marqueNom || ""}</div>
+                  <div class="store-name">${p.nom}</div>
+                </div>
+              </div>
+              <div class="store-card-footer">
+                <span style="font-family:var(--font-display);font-size:1.2rem;letter-spacing:.04em;color:var(--white);">${prix} F</span>
+                <a href="/pages/sneaker-detail.html?id=${p._id}" class="btn btn-glass btn-sm"><i class="ti ti-eye"></i> Voir</a>
+              </div>
+            </div>
+          </article>`;
+            })
+            .join("");
+          el.querySelectorAll(".rv:not(.visible)").forEach((e) =>
+            rvObs.observe(e),
+          );
+        } catch {
+          el.innerHTML = "";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", chargerProduit);
+    </script>
+  </body>
+</html>

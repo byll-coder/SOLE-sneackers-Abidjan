@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion — SOLE</title>
+    <link rel="icon" type="image/svg+xml" href="../logo/logo.jpeg" />
+    <link rel="alternate icon" href="../logo/logo.jpeg" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+      .auth-page {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      /* ── CÔTÉ GAUCHE (visuel) ── */
+      .auth-visual {
+        background: var(--dark);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 48px;
+      }
+      .auth-visual-bg {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--dark) 0%,
+          rgba(229, 9, 20, 0.08) 50%,
+          var(--dark) 100%
+        );
+      }
+      .auth-visual-lines {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        opacity: 0.04;
+      }
+      .auth-visual-lines::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          repeating-linear-gradient(
+            0deg,
+            var(--white) 0,
+            var(--white) 1px,
+            transparent 1px,
+            transparent 60px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            var(--white) 0,
+            var(--white) 1px,
+            transparent 1px,
+            transparent 60px
+          );
+      }
+      .auth-visual-logo {
+        font-family: var(--font-display);
+        font-size: 3rem;
+        letter-spacing: 0.15em;
+        color: var(--white);
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .auth-visual-logo .logo-dot {
+        width: 10px;
+        height: 10px;
+      }
+      .auth-visual-content {
+        position: relative;
+        z-index: 1;
+      }
+      .auth-visual-title {
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 4vw, 4rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        line-height: 0.95;
+        margin-bottom: 16px;
+      }
+      .auth-visual-title em {
+        color: var(--red);
+        font-style: normal;
+        display: block;
+      }
+      .auth-visual-desc {
+        color: var(--txt2);
+        font-size: 0.92rem;
+        font-weight: 300;
+        line-height: 1.7;
+      }
+      .auth-visual-steps {
+        margin-top: 36px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .auth-step {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .auth-step-ico {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        flex-shrink: 0;
+        background: var(--red-pale);
+        border: 1px solid rgba(229, 9, 20, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .auth-step-ico i {
+        color: var(--red);
+        font-size: 1rem;
+      }
+      .auth-step-txt {
+        font-size: 0.88rem;
+        color: var(--txt2);
+        font-weight: 300;
+      }
+      .auth-step-txt strong {
+        color: var(--white);
+        font-weight: 600;
+        display: block;
+      }
+
+      /* ── CÔTÉ DROIT (formulaire) ── */
+      .auth-form-side {
+        background: var(--black);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 32px;
+      }
+      .auth-box {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .auth-tabs {
+        display: flex;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-pill);
+        padding: 4px;
+        margin-bottom: 32px;
+      }
+      .auth-tab {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        border-radius: var(--r-pill);
+        font-family: var(--font-ui);
+        font-size: 0.88rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--txt2);
+        background: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+      }
+      .auth-tab i {
+        font-size: 0.95rem;
+      }
+      .auth-tab.active {
+        background: var(--red);
+        color: var(--white);
+      }
+
+      .auth-title {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 6px;
+      }
+      .auth-sub {
+        font-size: 0.86rem;
+        color: var(--txt2);
+        margin-bottom: 28px;
+        font-weight: 300;
+      }
+
+      .role-selector {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+      .role-btn {
+        flex: 1;
+        padding: 16px 12px;
+        background: var(--dark2);
+        border: 2px solid var(--glass-bd);
+        border-radius: var(--r);
+        font-family: var(--font-body);
+        font-size: 0.86rem;
+        color: var(--txt2);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.18s;
+      }
+      .role-btn i {
+        display: block;
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+      }
+      .role-btn .role-label {
+        font-family: var(--font-ui);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: block;
+      }
+      .role-btn .role-desc {
+        font-size: 0.72rem;
+        color: var(--txt3);
+        margin-top: 3px;
+        font-weight: 300;
+      }
+      .role-btn.active {
+        border-color: var(--red);
+        background: var(--red-pale);
+        color: var(--red);
+      }
+      .role-btn.active .role-desc {
+        color: rgba(229, 9, 20, 0.6);
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 22px 0;
+        color: var(--txt3);
+        font-size: 0.78rem;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--glass-bd);
+      }
+
+      .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.84rem;
+        color: var(--txt2);
+      }
+      .auth-footer a {
+        color: var(--red);
+      }
+      .auth-footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 900px) {
+        .auth-page {
+          grid-template-columns: 1fr;
+        }
+        .auth-visual {
+          display: none;
+        }
+        .auth-form-side {
+          padding: 100px 24px 40px;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="toast" id="global-toast"></div>
+
+    <nav class="navbar scrolled">
+      <a href="../index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
+      <div class="navbar-actions" id="navbar-actions"></div>
+    </nav>
+
+    <div class="auth-page">
+      <!-- VISUEL GAUCHE -->
+      <div class="auth-visual">
+        <div class="auth-visual-bg"></div>
+        <div class="auth-visual-lines"></div>
+        <div class="auth-visual-logo"><span class="logo-dot"></span> SOLE</div>
+        <div class="auth-visual-content">
+          <h2 class="auth-visual-title">Find your<em>next pair.</em></h2>
+          <p class="auth-visual-desc">
+            La plateforme qui connecte les amateurs de chaussures avec les
+            meilleures boutiques d'Abidjan.
+          </p>
+          <div class="auth-visual-steps">
+            <div class="auth-step">
+              <div class="auth-step-ico"><i class="ti ti-search"></i></div>
+              <div class="auth-step-txt">
+                <strong>Trouve ta boutique</strong>Recherche par quartier ou par
+                type de chaussures.
+              </div>
+            </div>
+            <div class="auth-step">
+              <div class="auth-step-ico">
+                <i class="ti ti-building-store"></i>
+              </div>
+              <div class="auth-step-txt">
+                <strong>Consulte les profils</strong>Horaires, photos, avis
+                clients et localisation.
+              </div>
+            </div>
+            <div class="auth-step">
+              <div class="auth-step-ico">
+                <i class="ti ti-message-circle"></i>
+              </div>
+              <div class="auth-step-txt">
+                <strong>Contacte directement</strong>Envoie un message au
+                propriétaire en quelques secondes.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULAIRE DROIT -->
+      <div class="auth-form-side">
+        <div class="auth-box">
+          <div class="auth-tabs">
+            <button
+              class="auth-tab"
+              id="tab-cx"
+              onclick="afficherMode('connexion')"
+            >
+              <i class="ti ti-login"></i> Connexion
+            </button>
+            <button
+              class="auth-tab"
+              id="tab-ins"
+              onclick="afficherMode('inscription')"
+            >
+              <i class="ti ti-user-plus"></i> Inscription
+            </button>
+          </div>
+
+          <!-- CONNEXION -->
+          <div id="form-connexion">
+            <h2 class="auth-title">Bon retour</h2>
+            <p class="auth-sub">Connecte-toi pour accéder à ton espace SOLE.</p>
+            <div id="alert-cx" class="alert alert-error"></div>
+
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <div class="input-wrap">
+                <i class="ti ti-mail"></i>
+                <input
+                  type="email"
+                  id="cx-email"
+                  class="form-input"
+                  placeholder="ton@email.com"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mot de passe</label>
+              <div class="input-wrap">
+                <i class="ti ti-lock"></i>
+                <input
+                  type="password"
+                  id="cx-password"
+                  class="form-input"
+                  placeholder="••••••••"
+                  onkeydown="if (event.key === 'Enter') seConnecter();"
+                />
+              </div>
+            </div>
+            <button
+              class="btn btn-red"
+              style="width: 100%; justify-content: center; margin-top: 8px"
+              onclick="seConnecter()"
+            >
+              <i class="ti ti-login"></i> Se connecter
+            </button>
+            <div class="divider">ou</div>
+            <div class="auth-footer">
+              Pas encore de compte ?
+              <a href="#" onclick="afficherMode('inscription')"
+                >Créer un compte</a
+              >
+            </div>
+          </div>
+
+          <!-- INSCRIPTION -->
+          <div id="form-inscription" style="display: none">
+            <h2 class="auth-title">Rejoins SOLE</h2>
+            <p class="auth-sub">Crée ton compte gratuitement.</p>
+            <div id="alert-ins" class="alert alert-error"></div>
+
+            <div class="role-selector">
+              <button
+                class="role-btn active"
+                id="role-customer"
+                onclick="setRole('customer')"
+              >
+                <i class="ti ti-user"></i>
+                <span class="role-label">Client</span>
+                <span class="role-desc">Je cherche des chaussures</span>
+              </button>
+              <button
+                class="role-btn"
+                id="role-seller"
+                onclick="setRole('seller')"
+              >
+                <i class="ti ti-building-store"></i>
+                <span class="role-label">Vendeur</span>
+                <span class="role-desc">Je vends des chaussures</span>
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Nom complet</label>
+              <div class="input-wrap">
+                <i class="ti ti-user"></i>
+                <input
+                  type="text"
+                  id="ins-nom"
+                  class="form-input"
+                  placeholder="Ton prénom et nom"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <div class="input-wrap">
+                <i class="ti ti-mail"></i>
+                <input
+                  type="email"
+                  id="ins-email"
+                  class="form-input"
+                  placeholder="ton@email.com"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label"
+                >Téléphone
+                <span style="color: var(--txt3); font-weight: 300"
+                  >(optionnel)</span
+                ></label
+              >
+              <div class="input-wrap">
+                <i class="ti ti-phone"></i>
+                <input
+                  type="tel"
+                  id="ins-telephone"
+                  class="form-input"
+                  placeholder="+225 XX XX XX XX XX"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quartier</label>
+              <div class="input-wrap">
+                <i class="ti ti-map-pin"></i>
+                <input
+                  type="text"
+                  id="ins-quartier"
+                  class="form-input"
+                  placeholder="Ex : Cocody, Marcory..."
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mot de passe</label>
+              <div class="input-wrap">
+                <i class="ti ti-lock"></i>
+                <input
+                  type="password"
+                  id="ins-password"
+                  class="form-input"
+                  placeholder="6 caractères minimum"
+                  onkeydown="if (event.key === 'Enter') sInscrire();"
+                />
+              </div>
+            </div>
+            <button
+              class="btn btn-red"
+              style="width: 100%; justify-content: center; margin-top: 8px"
+              onclick="sInscrire()"
+            >
+              <i class="ti ti-user-plus"></i> Créer mon compte
+            </button>
+            <div class="divider">ou</div>
+            <div class="auth-footer">
+              Déjà un compte ?
+              <a href="#" onclick="afficherMode('connexion')">Se connecter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+      let roleChoisi = "customer";
+
+      function init() {
+        const p = new URLSearchParams(window.location.search);
+        if (p.get("role") === "seller") setRole("seller");
+        afficherMode(p.get("mode") || "connexion");
+        if (Session.estConnecte()) redigerApresConnexion(Session.getUser());
+      }
+
+      function afficherMode(mode) {
+        const cx = mode === "connexion";
+        document.getElementById("form-connexion").style.display = cx
+          ? "block"
+          : "none";
+        document.getElementById("form-inscription").style.display = cx
+          ? "none"
+          : "block";
+        document.getElementById("tab-cx").classList.toggle("active", cx);
+        document.getElementById("tab-ins").classList.toggle("active", !cx);
+        document.title = cx ? "Connexion — SOLE" : "Inscription — SOLE";
+      }
+
+      function setRole(role) {
+        roleChoisi = role;
+        document
+          .getElementById("role-customer")
+          .classList.toggle("active", role === "customer");
+        document
+          .getElementById("role-seller")
+          .classList.toggle("active", role === "seller");
+      }
+
+      async function seConnecter() {
+        const al = document.getElementById("alert-cx");
+        al.classList.remove("show");
+        const email = document.getElementById("cx-email").value.trim();
+        const password = document.getElementById("cx-password").value;
+        if (!email || !password) {
+          al.innerHTML =
+            '<i class="ti ti-alert-circle"></i> Email et mot de passe obligatoires.';
+          al.classList.add("show");
+          return;
+        }
+        try {
+          const result = await Auth.connexion({ email, password });
+
+          const token = result.token || result.data?.token;
+          const user = result.user || result.data?.user;
+
+          if (!token || !user) {
+            throw new Error(
+              "Réponse du serveur invalide. Contacte le support.",
+            );
+          }
+
+          Session.setToken(token);
+          Session.setUser(user);
+          afficherToast("Connexion réussie !", "success");
+          redigerApresConnexion(user);
+        } catch (err) {
+          al.innerHTML = `<i class="ti ti-alert-circle"></i> ${err.message}`;
+          al.classList.add("show");
+        }
+      }
+
+      async function sInscrire() {
+        const al = document.getElementById("alert-ins");
+        al.classList.remove("show");
+        const nom = document.getElementById("ins-nom").value.trim();
+        const email = document.getElementById("ins-email").value.trim();
+        const telephone = document.getElementById("ins-telephone").value.trim();
+        const quartier = document.getElementById("ins-quartier").value.trim();
+        const password = document.getElementById("ins-password").value;
+
+        if (!nom || !email || !password) {
+          al.innerHTML =
+            '<i class="ti ti-alert-circle"></i> Nom, email et mot de passe obligatoires.';
+          al.classList.add("show");
+          return;
+        }
+        if (password.length < 6) {
+          al.innerHTML =
+            '<i class="ti ti-alert-circle"></i> Mot de passe trop court (6 min).';
+          al.classList.add("show");
+          return;
+        }
+        try {
+          const result = await Auth.inscription({
+            nom,
+            email,
+            password,
+            role: roleChoisi,
+            telephone,
+            quartier,
+          });
+
+          const token = result.token || result.data?.token;
+          const user = result.user || result.data?.user;
+
+          if (!token || !user) {
+            throw new Error(
+              "Réponse du serveur invalide. Contacte le support.",
+            );
+          }
+
+          Session.setToken(token);
+          Session.setUser(user);
+          afficherToast("Compte créé !", "success");
+          redigerApresConnexion(user);
+        } catch (err) {
+          al.innerHTML = `<i class="ti ti-alert-circle"></i> ${err.message}`;
+          al.classList.add("show");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+  </body>
+</html>

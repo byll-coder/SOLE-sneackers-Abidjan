@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon espace — SOLE</title>
+    <link rel="icon" type="image/jpeg" href="../logo/logo.jpeg" />
+    <link rel="alternate icon" href="../logo/logo.jpeg" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+      .dash-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: calc(100vh - 70px);
+        margin-top: 70px;
+      }
+      .dash-sidebar {
+        background: var(--dark);
+        border-right: 1px solid var(--glass-bd);
+        padding: 28px 0;
+        position: sticky;
+        top: 70px;
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+      }
+      .dash-user-bloc {
+        padding: 0 20px 24px;
+        border-bottom: 1px solid var(--glass-bd);
+        margin-bottom: 14px;
+      }
+      .dash-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: var(--red-pale);
+        border: 2px solid rgba(229, 9, 20, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        letter-spacing: 0.04em;
+        color: var(--red);
+        margin-bottom: 12px;
+      }
+      .dash-user-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--white);
+      }
+      .dash-user-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--font-ui);
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: var(--red-pale);
+        color: var(--red);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        padding: 2px 10px;
+        border-radius: var(--r-pill);
+        margin-top: 5px;
+      }
+      .dash-nav {
+        padding: 0 10px;
+      }
+      .dash-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 14px;
+        border-radius: var(--r-sm);
+        font-family: var(--font-ui);
+        font-size: 0.88rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--txt2);
+        cursor: pointer;
+        transition: all 0.15s;
+        margin-bottom: 3px;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+      .dash-nav-item i {
+        font-size: 1.05rem;
+      }
+      .dash-nav-item:hover {
+        background: var(--glass);
+        color: var(--white);
+      }
+      .dash-nav-item.active {
+        background: var(--red-pale);
+        color: var(--red);
+      }
+      .dash-nav-sep {
+        height: 1px;
+        background: var(--glass-bd);
+        margin: 10px 14px;
+      }
+      .dash-nav-item.danger:hover {
+        background: rgba(229, 9, 20, 0.08);
+        color: var(--error);
+      }
+
+      .dash-main {
+        padding: 36px;
+        background: var(--black);
+      }
+      .dash-section {
+        display: none;
+      }
+      .dash-section.active {
+        display: block;
+      }
+      .dash-title {
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 4px;
+      }
+      .dash-sub {
+        color: var(--txt2);
+        font-size: 0.88rem;
+        margin-bottom: 28px;
+        font-weight: 300;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .stat-card {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        padding: 22px;
+      }
+      .stat-ico {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--red-pale);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+      }
+      .stat-ico i {
+        font-size: 1.2rem;
+        color: var(--red);
+      }
+      .stat-num {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        letter-spacing: 0.04em;
+        color: var(--white);
+      }
+      .stat-lbl {
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--txt3);
+        margin-top: 3px;
+      }
+
+      .favoris-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .favori-card {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        overflow: hidden;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .favori-card:hover {
+        border-color: rgba(229, 9, 20, 0.3);
+        transform: translateY(-3px);
+      }
+      .favori-cover {
+        height: 140px;
+        object-fit: cover;
+        width: 100%;
+        background: var(--dark3);
+      }
+      .favori-cover-ph {
+        height: 140px;
+        background: var(--dark3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .favori-cover-ph i {
+        font-size: 2.5rem;
+        color: var(--txt3);
+      }
+      .favori-body {
+        padding: 16px;
+      }
+      .favori-name {
+        font-family: var(--font-ui);
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 6px;
+      }
+      .favori-meta {
+        font-size: 0.78rem;
+        color: var(--txt2);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .favori-foot {
+        display: flex;
+        gap: 8px;
+      }
+
+      .conv-list-dash {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .conv-item-dash {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        cursor: pointer;
+        transition: border-color 0.18s;
+      }
+      .conv-item-dash:hover {
+        border-color: rgba(229, 9, 20, 0.3);
+      }
+      .conv-avatar-dash {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--dark3);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 1rem;
+        color: var(--white);
+        overflow: hidden;
+      }
+      .conv-avatar-dash img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .conv-unread-dash {
+        margin-left: auto;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 9px;
+        background: var(--red);
+        color: var(--white);
+        font-size: 0.65rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        flex-shrink: 0;
+      }
+
+      .profil-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .profil-grid .full {
+        grid-column: 1/-1;
+      }
+      .dash-empty {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+      }
+      .dash-empty i {
+        font-size: 3rem;
+        color: var(--txt3);
+        display: block;
+        margin-bottom: 16px;
+      }
+      .dash-empty h3 {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 8px;
+      }
+      .dash-empty p {
+        color: var(--txt2);
+        font-size: 0.88rem;
+        margin-bottom: 22px;
+        font-weight: 300;
+      }
+
+      @media (max-width: 900px) {
+        .dash-layout {
+          grid-template-columns: 1fr;
+        }
+        .dash-sidebar {
+          position: static;
+          height: auto;
+        }
+        .profil-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="toast" id="global-toast"></div>
+
+    <!-- ✅ NAVBAR : liens corrigés depuis /pages/ -->
+    <nav class="navbar scrolled" id="navbar">
+      <a href="../index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
+      <ul class="navbar-links">
+        <li><a href="../index.html">Accueil</a></li>
+        <li><a href="./boutiques.html">Boutiques</a></li>
+        <li>
+          <a href="./message.html"
+            ><i class="ti ti-message-circle"></i> Messages</a
+          >
+        </li>
+      </ul>
+      <div class="navbar-actions" id="navbar-actions"></div>
+    </nav>
+
+    <div class="dash-layout relative">
+      <aside class="dash-sidebar">
+        <div class="dash-user-bloc">
+          <div class="dash-avatar" id="avatar-initiale">—</div>
+          <div class="dash-user-name" id="user-name">Chargement...</div>
+          <div class="dash-user-role"><i class="ti ti-user"></i> Client</div>
+        </div>
+        <nav class="dash-nav">
+          <button
+            class="dash-nav-item active"
+            onclick="afficherSection('accueil')"
+          >
+            <i class="ti ti-layout-dashboard"></i> Dashboard
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('favoris')">
+            <i class="ti ti-heart"></i> Favoris
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('messages')">
+            <i class="ti ti-message-circle"></i> Messages
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('profil')">
+            <i class="ti ti-user-circle"></i> Mon profil
+          </button>
+          <div class="dash-nav-sep"></div>
+          <!-- ✅ Lien Explorer corrigé -->
+          <button
+            class="dash-nav-item"
+            onclick="window.location.href = './boutiques.html'"
+          >
+            <i class="ti ti-search"></i> Explorer
+          </button>
+          <div class="dash-nav-sep"></div>
+          <button class="dash-nav-item danger" onclick="deconnexion()">
+            <i class="ti ti-logout"></i> Déconnexion
+          </button>
+        </nav>
+      </aside>
+
+      <main class="dash-main">
+        <!-- ACCUEIL -->
+        <div id="section-accueil" class="dash-section active">
+          <h1 class="dash-title">Dashboard</h1>
+          <p class="dash-sub">Bienvenue, <span id="prenom">—</span></p>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-ico"><i class="ti ti-heart"></i></div>
+              <div class="stat-num" id="nb-favoris">0</div>
+              <div class="stat-lbl">Boutiques favoris</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico"><i class="ti ti-message-circle"></i></div>
+              <div class="stat-num" id="nb-messages">0</div>
+              <div class="stat-lbl">Conversations</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico"><i class="ti ti-building-store"></i></div>
+              <div class="stat-num" id="nb-boutiques">—</div>
+              <div class="stat-lbl">Boutiques dispo</div>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-bottom: 16px;
+              flex-wrap: wrap;
+              gap: 12px;
+            "
+          >
+            <h3
+              style="
+                font-family: var(--font-display);
+                font-size: 1.4rem;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--white);
+              "
+            >
+              Mes boutiques favorites
+            </h3>
+            <button
+              class="btn btn-glass btn-sm"
+              onclick="afficherSection('favoris')"
+            >
+              Voir tout <i class="ti ti-arrow-right"></i>
+            </button>
+          </div>
+          <div id="apercu-favoris"><div class="spinner"></div></div>
+        </div>
+
+        <!-- FAVORIS -->
+        <div id="section-favoris" class="dash-section">
+          <h1 class="dash-title">Mes favoris</h1>
+          <p class="dash-sub">Les boutiques que tu as sauvegardées.</p>
+          <div class="favoris-grid" id="favoris-grid">
+            <div class="spinner"></div>
+          </div>
+        </div>
+
+        <!-- MESSAGES -->
+        <div id="section-messages" class="dash-section">
+          <h1 class="dash-title">Messages</h1>
+          <p class="dash-sub">Tes conversations avec les boutiques.</p>
+          <div class="conv-list-dash" id="conv-list-dash">
+            <div class="spinner"></div>
+          </div>
+        </div>
+
+        <!-- PROFIL -->
+        <div id="section-profil" class="dash-section">
+          <h1 class="dash-title">Mon profil</h1>
+          <p class="dash-sub">Modifie tes informations personnelles.</p>
+          <div class="glass-card" style="padding: 28px; max-width: 580px">
+            <div id="alert-profil" class="alert alert-error"></div>
+            <div id="alert-profil-ok" class="alert alert-success"></div>
+            <div class="profil-grid">
+              <div class="form-group full">
+                <label class="form-label">Nom complet</label>
+                <div class="input-wrap">
+                  <i class="ti ti-user"></i
+                  ><input type="text" id="p-nom" class="form-input" />
+                </div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label"
+                  >Email
+                  <span style="color: var(--txt3); font-weight: 300"
+                    >(non modifiable)</span
+                  ></label
+                >
+                <div class="input-wrap">
+                  <i class="ti ti-mail"></i
+                  ><input
+                    type="email"
+                    id="p-email"
+                    class="form-input"
+                    disabled
+                    style="opacity: 0.5"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Téléphone</label>
+                <div class="input-wrap">
+                  <i class="ti ti-phone"></i
+                  ><input type="tel" id="p-telephone" class="form-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Quartier</label>
+                <div class="input-wrap">
+                  <i class="ti ti-map-pin"></i
+                  ><input type="text" id="p-quartier" class="form-input" />
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-red" onclick="sauvegarderProfil()">
+              <i class="ti ti-device-floppy"></i> Sauvegarder
+            </button>
+
+            <div
+              style="
+                margin-top: 28px;
+                padding-top: 24px;
+                border-top: 1px solid var(--glass-bd);
+              "
+            >
+              <h4
+                style="
+                  font-family: var(--font-ui);
+                  font-size: 0.78rem;
+                  font-weight: 700;
+                  letter-spacing: 0.14em;
+                  text-transform: uppercase;
+                  color: var(--txt2);
+                  margin-bottom: 16px;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <i class="ti ti-lock" style="color: var(--red)"></i> Mot de
+                passe
+              </h4>
+              <div id="alert-pass" class="alert alert-error"></div>
+              <div id="alert-pass-ok" class="alert alert-success"></div>
+              <div class="form-group">
+                <label class="form-label">Ancien mot de passe</label>
+                <input
+                  type="password"
+                  id="p-old-pass"
+                  class="form-input"
+                  placeholder="••••••••"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nouveau mot de passe</label>
+                <input
+                  type="password"
+                  id="p-new-pass"
+                  class="form-input"
+                  placeholder="6 caractères minimum"
+                />
+              </div>
+              <button class="btn btn-glass" onclick="changerPass()">
+                <i class="ti ti-shield-lock"></i> Mettre à jour
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ✅ Chemins JS corrigés depuis /pages/ -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      function afficherSection(nom) {
+        document
+          .querySelectorAll(".dash-section")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".dash-nav-item")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("section-" + nom).classList.add("active");
+        document
+          .querySelector(`[onclick="afficherSection('${nom}')"]`)
+          ?.classList.add("active");
+      }
+
+      async function chargerProfil() {
+        try {
+          const res = await Auth.moi();
+          const user = res.data || res.user || res;
+
+          const prenom = user.nom ? user.nom.split(" ")[0] : "Client";
+          document.getElementById("prenom").textContent = prenom;
+          document.getElementById("user-name").textContent = user.nom;
+          document.getElementById("avatar-initiale").textContent =
+            prenom[0].toUpperCase();
+          document.getElementById("p-nom").value = user.nom || "";
+          document.getElementById("p-email").value = user.email || "";
+          document.getElementById("p-telephone").value = user.telephone || "";
+          document.getElementById("p-quartier").value = user.quartier || "";
+
+          Session.setUser(user);
+          majNavbar();
+        } catch (err) {
+          console.error("Auth.moi() a échoué:", err);
+          const msg = (err.message || "").toLowerCase();
+          if (
+            msg.includes("401") ||
+            msg.includes("non autorisé") ||
+            msg.includes("invalid token") ||
+            msg.includes("jwt")
+          ) {
+            Session.clear();
+            // ✅ Redirection corrigée : même dossier /pages/
+            window.location.replace("./auth.html?mode=connexion");
+          } else {
+            afficherToast("Impossible de joindre le serveur.", "error");
+          }
+        }
+      }
+
+      function renderFavoriCard(s) {
+        return `<div class="favori-card">
+        ${
+          s.coverImage
+            ? `<img src="${s.coverImage}" class="favori-cover" alt="${s.nom}">`
+            : `<div class="favori-cover-ph"><i class="ti ti-building-store"></i></div>`
+        }
+        <div class="favori-body">
+          <div class="favori-name">${s.nom}</div>
+          <div class="favori-meta"><i class="ti ti-map-pin"></i>${s.quartier}</div>
+          <div class="favori-foot">
+            <!-- ✅ Lien boutique-detail corrigé -->
+            <a href="./boutique-detail.html?id=${s._id}" class="btn btn-glass btn-sm" style="flex:1;justify-content:center;"><i class="ti ti-eye"></i> Voir</a>
+            <button class="btn btn-outline btn-sm" onclick="retirerFavori('${s._id}',this)" style="flex:1;justify-content:center;"><i class="ti ti-heart-off"></i> Retirer</button>
+          </div>
+        </div>
+      </div>`;
+      }
+
+      async function chargerFavoris(apercu = false) {
+        const id = apercu ? "apercu-favoris" : "favoris-grid";
+        const el = document.getElementById(id);
+        try {
+          const { data } = await Favorites.stores();
+          document.getElementById("nb-favoris").textContent = data.length;
+          const liste = apercu ? data.slice(0, 3) : data;
+          if (!liste.length) {
+            el.innerHTML = `<div class="dash-empty"><i class="ti ti-heart-off"></i><h3>Aucun favori</h3><p>Explore les boutiques et sauvegarde tes préférées.</p><a href="./boutiques.html" class="btn btn-red"><i class="ti ti-search"></i> Explorer</a></div>`;
+            return;
+          }
+          el.innerHTML = `<div class="favoris-grid">${liste.map(renderFavoriCard).join("")}</div>`;
+        } catch {
+          el.innerHTML = "";
+        }
+      }
+
+      async function retirerFavori(id, btn) {
+        try {
+          await Favorites.toggleStore(id);
+          btn.closest(".favori-card").remove();
+          afficherToast("Retiré des favoris", "success");
+          const nb = document.querySelectorAll(".favori-card").length;
+          document.getElementById("nb-favoris").textContent = nb;
+        } catch (err) {
+          afficherToast(err.message, "error");
+        }
+      }
+
+      async function chargerConversations() {
+        const el = document.getElementById("conv-list-dash");
+        try {
+          const { data } = await Messages.conversations();
+          document.getElementById("nb-messages").textContent = data.length;
+          if (!data.length) {
+            el.innerHTML = `<div class="dash-empty"><i class="ti ti-message-off"></i><h3>Aucun message</h3><p>Contacte une boutique pour démarrer une conversation.</p><a href="./boutiques.html" class="btn btn-red"><i class="ti ti-building-store"></i> Voir les boutiques</a></div>`;
+            return;
+          }
+          const user = Session.getUser();
+          el.innerHTML = data
+            .map((c) => {
+              const autre =
+                c.participants.find((p) => p._id !== user._id) ||
+                c.participants[0];
+              const nonLus = c.nonLus?.[user._id] || 0;
+              // ✅ Lien message corrigé
+              return `<div class="conv-item-dash" onclick="window.location.href='./message.html?conv=${c._id}'">
+            <div class="conv-avatar-dash">${autre?.avatar ? `<img src="${autre.avatar}" alt="">` : (autre?.nom || "?")[0].toUpperCase()}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:600;font-size:.9rem;color:var(--white);margin-bottom:2px;">${autre?.nom || "Utilisateur"}</div>
+              <div style="font-size:.78rem;color:var(--txt3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.dernierMessage?.contenu || "Démarrer la conversation..."}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;">
+              <span style="font-size:.7rem;color:var(--txt3);">${formatDate(c.dernierMessageAt)}</span>
+              ${nonLus > 0 ? `<span class="conv-unread-dash">${nonLus > 9 ? "9+" : nonLus}</span>` : ""}
+            </div>
+          </div>`;
+            })
+            .join("");
+        } catch {
+          el.innerHTML = "";
+        }
+      }
+
+      async function chargerStatBoutiques() {
+        try {
+          const { total } = await Stores.liste({ limit: 1 });
+          document.getElementById("nb-boutiques").textContent = total;
+        } catch {}
+      }
+
+      async function sauvegarderProfil() {
+        const al = document.getElementById("alert-profil"),
+          ok = document.getElementById("alert-profil-ok");
+        al.classList.remove("show");
+        ok.classList.remove("show");
+        const nom = document.getElementById("p-nom").value.trim();
+        if (!nom) {
+          al.innerHTML =
+            '<i class="ti ti-alert-circle"></i> Le nom est obligatoire.';
+          al.classList.add("show");
+          return;
+        }
+        try {
+          await Auth.modifierProfil({
+            nom,
+            telephone: document.getElementById("p-telephone").value.trim(),
+            quartier: document.getElementById("p-quartier").value.trim(),
+          });
+          const user = Session.getUser();
+          Session.setUser({ ...user, nom });
+          ok.innerHTML =
+            '<i class="ti ti-circle-check"></i> Profil mis à jour !';
+          ok.classList.add("show");
+          document.getElementById("user-name").textContent = nom;
+          document.getElementById("prenom").textContent = nom.split(" ")[0];
+        } catch (err) {
+          al.innerHTML = `<i class="ti ti-alert-circle"></i> ${err.message}`;
+          al.classList.add("show");
+        }
+      }
+
+      async function changerPass() {
+        const al = document.getElementById("alert-pass"),
+          ok = document.getElementById("alert-pass-ok");
+        al.classList.remove("show");
+        ok.classList.remove("show");
+        const ancien = document.getElementById("p-old-pass").value;
+        const nouveau = document.getElementById("p-new-pass").value;
+        if (!ancien || !nouveau) {
+          al.innerHTML =
+            '<i class="ti ti-alert-circle"></i> Les deux champs sont requis.';
+          al.classList.add("show");
+          return;
+        }
+        if (nouveau.length < 6) {
+          al.innerHTML =
+            '<i class="ti ti-alert-circle"></i> Nouveau mot de passe trop court.';
+          al.classList.add("show");
+          return;
+        }
+        try {
+          await Auth.changerPassword({
+            ancienPassword: ancien,
+            nouveauPassword: nouveau,
+          });
+          ok.innerHTML =
+            '<i class="ti ti-circle-check"></i> Mot de passe mis à jour !';
+          ok.classList.add("show");
+          document.getElementById("p-old-pass").value = "";
+          document.getElementById("p-new-pass").value = "";
+        } catch (err) {
+          al.innerHTML = `<i class="ti ti-alert-circle"></i> ${err.message}`;
+          al.classList.add("show");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        if (!protegerPage("customer")) return;
+        chargerProfil();
+        chargerFavoris(true);
+        chargerFavoris(false);
+        chargerConversations();
+        chargerStatBoutiques();
+      });
+    </script>
+  </body>
+</html>

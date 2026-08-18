@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boutique — SOLE</title>
+    <link rel="icon" type="image/svg+xml" href="../logo/logo.jpeg" />
+    <link rel="alternate icon" href="../logo/logo.jpeg" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+      .cover {
+        height: 440px;
+        position: relative;
+        overflow: hidden;
+        background: var(--dark2);
+      }
+      .cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.65);
+      }
+      .cover-ph {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--dark2), var(--dark3));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .cover-ph i {
+        font-size: 6rem;
+        color: var(--txt3);
+      }
+      .cover-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(8, 8, 8, 0) 30%,
+          rgba(8, 8, 8, 0.95) 100%
+        );
+      }
+
+      .store-header {
+        position: relative;
+        z-index: 2;
+        margin-top: -100px;
+        padding-bottom: 40px;
+      }
+      .store-header-inner {
+        display: flex;
+        align-items: flex-end;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+      .store-logo-big {
+        width: 110px;
+        height: 110px;
+        border-radius: var(--r);
+        border: 3px solid var(--glass-bd2);
+        background: var(--dark2);
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      }
+      .store-logo-big img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .store-logo-big i {
+        font-size: 3rem;
+        color: var(--txt3);
+      }
+      .store-header-info {
+        flex: 1;
+        min-width: 240px;
+      }
+      .store-header-name {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 10px;
+        line-height: 1;
+      }
+      .store-header-meta {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .store-header-meta span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.86rem;
+        color: var(--txt2);
+      }
+      .store-header-meta i {
+        font-size: 0.95rem;
+      }
+      .store-header-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .store-header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-left: auto;
+      }
+
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 28px;
+        align-items: start;
+      }
+
+      .detail-block {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        padding: 24px;
+        margin-bottom: 18px;
+      }
+      .block-label {
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+
+      .galerie-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .galerie-img {
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: var(--r-sm);
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .galerie-img:hover {
+        transform: scale(1.04);
+      }
+      .galerie-ph {
+        aspect-ratio: 1;
+        background: var(--dark3);
+        border-radius: var(--r-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .galerie-ph i {
+        font-size: 1.6rem;
+        color: var(--txt3);
+      }
+
+      .horaires-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .horaire-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--glass-bd);
+        font-size: 0.86rem;
+      }
+      .horaire-row:last-child {
+        border-bottom: none;
+      }
+      .horaire-jour {
+        color: var(--txt2);
+        font-weight: 500;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .horaire-jour i {
+        color: var(--red);
+        font-size: 0.85rem;
+      }
+      .horaire-val {
+        color: var(--white);
+        font-weight: 600;
+      }
+      .horaire-ferme {
+        color: var(--txt3);
+      }
+
+      .contact-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.88rem;
+      }
+      .contact-ico {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--red-pale);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .contact-ico i {
+        color: var(--red);
+        font-size: 1rem;
+      }
+      .contact-lien {
+        color: var(--txt);
+        transition: color 0.18s;
+      }
+      .contact-lien:hover {
+        color: var(--red);
+      }
+
+      .avis-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .avis-item {
+        background: var(--dark3);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-sm);
+        padding: 16px;
+      }
+      .avis-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+      .avis-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--red-pale);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--red);
+        flex-shrink: 0;
+      }
+      .avis-nom {
+        font-weight: 600;
+        font-size: 0.88rem;
+      }
+      .avis-date {
+        font-size: 0.72rem;
+        color: var(--txt3);
+      }
+      .avis-txt {
+        font-size: 0.86rem;
+        color: var(--txt2);
+        line-height: 1.6;
+      }
+
+      .stars-input {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .star-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--txt3);
+        transition:
+          color 0.15s,
+          transform 0.15s;
+        padding: 2px;
+      }
+      .star-btn i {
+        font-size: 1.6rem;
+      }
+      .star-btn.active i {
+        color: var(--warning);
+      }
+      .star-btn.active {
+        transform: scale(1.1);
+      }
+
+      .sidebar-card {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        padding: 22px;
+        margin-bottom: 16px;
+        position: sticky;
+        top: 90px;
+      }
+
+      .store-stat-row {
+        display: flex;
+        gap: 0;
+      }
+      .store-stat {
+        flex: 1;
+        text-align: center;
+        padding: 14px 8px;
+        border-right: 1px solid var(--glass-bd);
+      }
+      .store-stat:last-child {
+        border-right: none;
+      }
+      .store-stat-num {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        letter-spacing: 0.04em;
+        color: var(--white);
+      }
+      .store-stat-lbl {
+        font-size: 0.7rem;
+        color: var(--txt3);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      @media (max-width: 900px) {
+        .detail-layout {
+          grid-template-columns: 1fr;
+        }
+        .cover {
+          height: 260px;
+        }
+        .galerie-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="toast" id="global-toast"></div>
+
+    <nav class="navbar scrolled" id="navbar">
+      <a href="../index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
+      <ul class="navbar-links">
+        <li><a href="../index.html">Accueil</a></li>
+        <li><a href="../pages/boutiques.html" class="active">Boutiques</a></li>
+        <li>
+          <a href="../pages/message.html"
+            ><i class="ti ti-message-circle"></i> Messages</a
+          >
+        </li>
+      </ul>
+      <div class="navbar-actions" id="navbar-actions"></div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../index.html"><i class="ti ti-home"></i> Accueil</a>
+      <a href="../pages/boutiques.html"
+        ><i class="ti ti-building-store"></i> Boutiques</a
+      >
+      <a href="../pages/message.html"
+        ><i class="ti ti-message-circle"></i> Messages</a
+      >
+    </div>
+
+    <div id="page-content">
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 60vh;
+        "
+      >
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      const storeId = new URLSearchParams(window.location.search).get("id");
+      let noteChoisie = 0;
+      if (!storeId) window.location.href = "../pages/boutiques.html";
+
+      function choisirEtoile(n) {
+        noteChoisie = n;
+        document.querySelectorAll(".star-btn").forEach((b, i) => {
+          b.classList.toggle("active", i < n);
+          b.querySelector("i").className =
+            i < n ? "ti ti-star-filled" : "ti ti-star";
+        });
+      }
+
+      async function toggleFavori(btn) {
+        if (!Session.estConnecte()) {
+          afficherToast("Connecte-toi pour ajouter aux favoris", "error");
+          return;
+        }
+        try {
+          const { action } = await Favorites.toggleStore(storeId);
+          btn.innerHTML =
+            action === "ajouté"
+              ? '<i class="ti ti-heart-filled"></i> Favori'
+              : '<i class="ti ti-heart"></i> Favoris';
+          afficherToast(
+            action === "ajouté" ? "Ajouté aux favoris" : "Retiré des favoris",
+            "success",
+          );
+        } catch (err) {
+          afficherToast(err.message, "error");
+        }
+      }
+
+      async function soumettreAvis() {
+        if (!Session.estConnecte()) {
+          afficherToast("Connecte-toi pour laisser un avis", "error");
+          return;
+        }
+        if (!noteChoisie) {
+          afficherToast("Choisis une note", "error");
+          return;
+        }
+        const commentaire = document.getElementById("avis-texte").value.trim();
+        if (!commentaire) {
+          afficherToast("Écris un commentaire", "error");
+          return;
+        }
+        try {
+          showLoading();
+          await Stores.ajouterAvis(storeId, { note: noteChoisie, commentaire });
+          afficherToast("Avis publié !", "success");
+          hideLoading();
+          chargerBoutique();
+        } catch (err) {
+          hideLoading();
+          afficherToast(err.message, "error");
+        }
+      }
+
+      function renderHoraires(h) {
+        if (!h)
+          return '<p style="color:var(--txt3);font-size:.86rem;">Horaires non renseignés</p>';
+        const jours = [
+          "lundi",
+          "mardi",
+          "mercredi",
+          "jeudi",
+          "vendredi",
+          "samedi",
+          "dimanche",
+        ];
+        return `<div class="horaires-list">${jours
+          .map(
+            (j) => `
+        <div class="horaire-row">
+          <span class="horaire-jour"><i class="ti ti-clock"></i>${j}</span>
+          ${
+            h[j]?.ouvert
+              ? `<span class="horaire-val">${h[j].debut || "08:00"} – ${h[j].fin || "18:00"}</span>`
+              : `<span class="horaire-ferme">Fermé</span>`
+          }
+        </div>`,
+          )
+          .join("")}</div>`;
+      }
+
+      function renderAvis(avis) {
+        if (!avis?.length)
+          return '<p style="color:var(--txt3);font-size:.86rem;">Aucun avis pour l\'instant. Sois le premier !</p>';
+        return `<div class="avis-list">${avis
+          .map(
+            (a) => `
+        <div class="avis-item">
+          <div class="avis-header">
+            <div class="avis-avatar">${(a.auteur?.nom || a.nomAuteur || "U")[0].toUpperCase()}</div>
+            <div>
+              <div class="avis-nom">${a.auteur?.nom || "Utilisateur"}</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="stars">${'<i class="ti ti-star-filled"></i>'.repeat(a.note)}${'<i class="ti ti-star"></i>'.repeat(5 - a.note)}</span>
+                <span class="avis-date">${new Date(a.createdAt).toLocaleDateString("fr-FR")}</span>
+              </div>
+            </div>
+          </div>
+          <p class="avis-txt">${a.commentaire}</p>
+        </div>`,
+          )
+          .join("")}</div>`;
+      }
+
+      async function chargerBoutique() {
+        try {
+          const [{ data: s }, { data: avisData }] = await Promise.all([
+            Stores.detail(storeId),
+            Stores.getAvis(storeId),
+          ]);
+          document.title = `${s.nom} — SOLE`;
+          const user = Session.getUser();
+          const estProp = user && s.proprietaire?._id === user._id;
+          const ouvert = isStoreOpen(s.horaires);
+
+          let isFavori = false;
+          if (Session.estConnecte()) {
+            try {
+              const r = await Favorites.checkStore(storeId);
+              isFavori = r.isFavori;
+            } catch {}
+          }
+
+          document.getElementById("page-content").innerHTML = `
+          <div class="cover">
+            ${s.coverImage ? `<img src="${s.coverImage}" alt="${s.nom}">` : `<div class="cover-ph"><i class="ti ti-building-store"></i></div>`}
+            <div class="cover-overlay"></div>
+          </div>
+
+          <div class="container">
+            <div class="store-header">
+              <div class="store-header-inner">
+                <div class="store-logo-big">
+                  ${s.logo ? `<img src="${s.logo}" alt="Logo">` : '<i class="ti ti-shoe"></i>'}
+                </div>
+                <div class="store-header-info">
+                  <h1 class="store-header-name">${s.nom}</h1>
+                  <div class="store-header-meta">
+                    <span><i class="ti ti-map-pin"></i>${s.quartier}${s.ville ? ", " + s.ville : ""}</span>
+                    <span><i class="ti ti-star-filled" style="color:var(--warning)"></i>
+                      <strong style="color:var(--white)">${s.noteGlobale > 0 ? s.noteGlobale.toFixed(1) : "—"}</strong>
+                      <span style="color:var(--txt3)">(${s.nbAvis || 0} avis)</span>
+                    </span>
+                    ${
+                      ouvert === null
+                        ? ""
+                        : ouvert
+                          ? '<span class="store-status-open"><i class="ti ti-clock"></i> Ouvert</span>'
+                          : '<span class="store-status-closed"><i class="ti ti-clock-off"></i> Fermé</span>'
+                    }
+                  </div>
+                  <div class="store-header-badges">
+                    ${s.isVerifie ? `<span class="sneaker-card-badge badge-verified" style="position:static;"><i class="ti ti-shield-check"></i> Vérifié</span>` : ""}
+                    ${s.isPremium ? `<span class="sneaker-card-badge badge-new" style="position:static;"><i class="ti ti-crown"></i> Premium</span>` : ""}
+                  </div>
+                </div>
+                <div class="store-header-actions">
+                  ${
+                    estProp
+                      ? `<a href="../pages/dashboard-vendeur.html" class="btn btn-glass"><i class="ti ti-settings"></i> Gérer</a>`
+                      : `<button class="btn btn-glass" id="btn-favori" onclick="toggleFavori(this)">
+                         <i class="ti ti-${isFavori ? "heart-filled" : "heart"}"></i> ${isFavori ? "Favori" : "Favoris"}
+                       </button>`
+                  }
+                  ${
+                    s.whatsapp
+                      ? `<a href="https://wa.me/${s.whatsapp.replace(/\D/g, "")}" target="_blank" class="btn btn-glass"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>`
+                      : ""
+                  }
+                  ${
+                    !estProp
+                      ? `<button class="btn btn-red" onclick="contacterStore('${s._id}','${s.proprietaire?._id || s.proprietaire}')">
+                    <i class="ti ti-message-circle"></i> Contacter
+                  </button>`
+                      : ""
+                  }
+                </div>
+              </div>
+
+              <!-- Stats rapides -->
+              <div class="store-stat-row" style="margin-top:28px;border:1px solid var(--glass-bd);border-radius:var(--r);">
+                <div class="store-stat"><div class="store-stat-num">${s.vues || 0}</div><div class="store-stat-lbl">Vues</div></div>
+                <div class="store-stat"><div class="store-stat-num">${s.nbAvis || 0}</div><div class="store-stat-lbl">Avis</div></div>
+                <div class="store-stat"><div class="store-stat-num">${s.followers || 0}</div><div class="store-stat-lbl">Followers</div></div>
+                <div class="store-stat"><div class="store-stat-num">${s.noteGlobale > 0 ? s.noteGlobale.toFixed(1) : "—"}</div><div class="store-stat-lbl">Note</div></div>
+              </div>
+            </div>
+
+            <div class="detail-layout">
+              <div>
+                ${
+                  s.description
+                    ? `
+                <div class="detail-block">
+                  <div class="block-label"><i class="ti ti-info-circle"></i> À propos</div>
+                  <p style="color:var(--txt2);font-size:.92rem;line-height:1.75;font-weight:300;">${s.description}</p>
+                </div>`
+                    : ""
+                }
+
+                ${
+                  s.coverImage || s.galerie?.length
+                    ? `
+                <div class="detail-block">
+                  <div class="block-label"><i class="ti ti-photo"></i> Photos</div>
+                  <div class="galerie-grid">
+                    ${s.coverImage ? `<img src="${s.coverImage}" class="galerie-img" alt="cover">` : ""}
+                    ${(s.galerie || []).map((u) => `<img src="${u}" class="galerie-img" alt="photo">`).join("")}
+                    ${!s.galerie?.length ? '<div class="galerie-ph"><i class="ti ti-camera"></i></div><div class="galerie-ph"><i class="ti ti-camera"></i></div>' : ""}
+                  </div>
+                </div>`
+                    : ""
+                }
+
+                <div class="detail-block">
+                  <div class="block-label"><i class="ti ti-message-circle"></i> Avis (${s.nbAvis || 0})</div>
+                  ${renderAvis(avisData)}
+                  ${
+                    Session.estConnecte() &&
+                    Session.getUser()?.role === "customer"
+                      ? `
+                  <div style="margin-top:22px;padding-top:20px;border-top:1px solid var(--glass-bd);">
+                    <div class="block-label"><i class="ti ti-pencil"></i> Laisser un avis</div>
+                    <div class="stars-input">
+                      ${[1, 2, 3, 4, 5].map((n) => `<button class="star-btn" onclick="choisirEtoile(${n})"><i class="ti ti-star"></i></button>`).join("")}
+                    </div>
+                    <textarea id="avis-texte" class="form-input" placeholder="Partage ton expérience avec cette boutique..." style="margin-bottom:12px;"></textarea>
+                    <button class="btn btn-red" onclick="soumettreAvis()"><i class="ti ti-send"></i> Publier</button>
+                  </div>`
+                      : ""
+                  }
+                </div>
+              </div>
+
+              <div>
+                <div class="sidebar-card">
+                  <div class="block-label" style="margin-bottom:16px;"><i class="ti ti-address-book"></i> Contact</div>
+                  <div class="contact-list">
+                    ${s.adresse ? `<div class="contact-item"><div class="contact-ico"><i class="ti ti-map-pin"></i></div><span>${s.adresse}</span></div>` : ""}
+                    ${s.telephone ? `<div class="contact-item"><div class="contact-ico"><i class="ti ti-phone"></i></div><a href="tel:${s.telephone}" class="contact-lien">${s.telephone}</a></div>` : ""}
+                    ${
+                      s.whatsapp
+                        ? `<div class="contact-item"><div class="contact-ico"><i class="ti ti-brand-whatsapp"></i></div>
+                      <a href="https://wa.me/${s.whatsapp.replace(/\D/g, "")}" target="_blank" class="contact-lien">WhatsApp</a></div>`
+                        : ""
+                    }
+                    ${s.email ? `<div class="contact-item"><div class="contact-ico"><i class="ti ti-mail"></i></div><a href="mailto:${s.email}" class="contact-lien">${s.email}</a></div>` : ""}
+                    ${
+                      s.instagram
+                        ? `<div class="contact-item"><div class="contact-ico"><i class="ti ti-brand-instagram"></i></div>
+                      <a href="https://instagram.com/${s.instagram.replace("@", "")}" target="_blank" class="contact-lien">@${s.instagram.replace("@", "")}</a></div>`
+                        : ""
+                    }
+                  </div>
+                  ${
+                    !estProp
+                      ? `
+                  <button class="btn btn-red" style="width:100%;justify-content:center;margin-top:18px;" onclick="contacterStore('${s._id}','${s.proprietaire?._id || s.proprietaire}')">
+                    <i class="ti ti-message-circle"></i> Envoyer un message
+                  </button>`
+                      : ""
+                  }
+                </div>
+
+                <div class="sidebar-card" style="position:sticky;top:90px;">
+                  <div class="block-label" style="margin-bottom:16px;"><i class="ti ti-clock"></i> Horaires</div>
+                  ${renderHoraires(s.horaires)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:40px 0 0;">
+            <div class="container">
+              <div class="footer-bottom" style="border-top:1px solid var(--glass-bd);padding-top:24px;">
+                <span>© 2025 SOLE Sneakers CI</span>
+                <a href="../pages/boutiques.html" style="color:var(--red);display:flex;align-items:center;gap:6px;">
+                  <i class="ti ti-arrow-left"></i> Retour aux boutiques
+                </a>
+              </div>
+            </div>
+          </div>`;
+        } catch (err) {
+          document.getElementById("page-content").innerHTML = `
+          <div style="text-align:center;padding:120px 24px;">
+            <i class="ti ti-building-store" style="font-size:4rem;color:var(--txt3);display:block;margin-bottom:20px;"></i>
+            <h2 style="font-family:var(--font-display);font-size:3rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white);margin-bottom:10px;">Boutique introuvable</h2>
+            <p style="color:var(--txt2);margin-bottom:28px;">${err.message}</p>
+            <a href="../pages/boutiques.html" class="btn btn-red"><i class="ti ti-arrow-left"></i> Retour</a>
+          </div>`;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", chargerBoutique);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Espace Pro — SOLE</title>
+    <link rel="icon" type="image/jpeg" href="../logo/logo.jpeg" />
+    <link rel="alternate icon" href="../logo/logo.jpeg" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+      .dash-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: calc(100vh - 70px);
+        margin-top: 70px;
+      }
+      .dash-sidebar {
+        background: var(--dark);
+        border-right: 1px solid var(--glass-bd);
+        padding: 28px 0;
+        position: sticky;
+        top: 70px;
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+      }
+      .dash-user-bloc {
+        padding: 0 20px 24px;
+        border-bottom: 1px solid var(--glass-bd);
+        margin-bottom: 14px;
+      }
+      .dash-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: var(--red-pale);
+        border: 2px solid rgba(229, 9, 20, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        letter-spacing: 0.04em;
+        color: var(--red);
+        margin-bottom: 12px;
+      }
+      .dash-user-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--white);
+      }
+      .dash-user-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--font-ui);
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: var(--red-pale);
+        color: var(--red);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        padding: 2px 10px;
+        border-radius: var(--r-pill);
+        margin-top: 5px;
+      }
+      .dash-nav {
+        padding: 0 10px;
+      }
+      .dash-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 14px;
+        border-radius: var(--r-sm);
+        font-family: var(--font-ui);
+        font-size: 0.88rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--txt2);
+        cursor: pointer;
+        transition: all 0.15s;
+        margin-bottom: 3px;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+      .dash-nav-item i {
+        font-size: 1.05rem;
+      }
+      .dash-nav-item:hover {
+        background: var(--glass);
+        color: var(--white);
+      }
+      .dash-nav-item.active {
+        background: var(--red-pale);
+        color: var(--red);
+      }
+      .dash-nav-sep {
+        height: 1px;
+        background: var(--glass-bd);
+        margin: 10px 14px;
+      }
+      .dash-nav-item.danger:hover {
+        background: rgba(229, 9, 20, 0.08);
+        color: var(--error);
+      }
+
+      .dash-main {
+        padding: 36px;
+        background: var(--black);
+      }
+      .dash-section {
+        display: none;
+      }
+      .dash-section.active {
+        display: block;
+      }
+      .dash-title {
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 4px;
+      }
+      .dash-sub {
+        color: var(--txt2);
+        font-size: 0.88rem;
+        margin-bottom: 28px;
+        font-weight: 300;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 32px;
+      }
+      .stat-card {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        padding: 20px;
+      }
+      .stat-ico {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        background: var(--red-pale);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+      .stat-ico i {
+        color: var(--red);
+        font-size: 1.1rem;
+      }
+      .stat-num {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        letter-spacing: 0.04em;
+        color: var(--white);
+      }
+      .stat-lbl {
+        font-family: var(--font-ui);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--txt3);
+        margin-top: 2px;
+      }
+
+      .section-block {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        padding: 24px;
+        margin-bottom: 20px;
+      }
+      .block-label {
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .form-grid .full {
+        grid-column: 1/-1;
+      }
+
+      .horaires-admin {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .horaire-row-admin {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 12px;
+        align-items: center;
+      }
+      .horaire-fields {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .horaire-fields label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        color: var(--txt2);
+        cursor: pointer;
+      }
+      .horaire-fields input[type="time"] {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-bd2);
+        border-radius: var(--r-sm);
+        color: var(--white);
+        padding: 7px 10px;
+        font-family: var(--font-body);
+        font-size: 0.82rem;
+        outline: none;
+      }
+      .horaire-fields input[type="time"]:focus {
+        border-color: var(--red);
+      }
+      .horaire-jour-label {
+        font-family: var(--font-ui);
+        font-size: 0.86rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--white);
+        text-transform: capitalize;
+      }
+
+      .galerie-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .galerie-url-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .btn-remove-url {
+        background: rgba(229, 9, 20, 0.1);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        color: var(--error);
+        border-radius: var(--r-sm);
+        padding: 9px 12px;
+        cursor: pointer;
+        transition: all 0.15s;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.82rem;
+      }
+      .btn-remove-url:hover {
+        background: rgba(229, 9, 20, 0.2);
+      }
+      .btn-add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: none;
+        border: 1.5px dashed var(--glass-bd2);
+        color: var(--txt2);
+        border-radius: var(--r-sm);
+        padding: 12px;
+        cursor: pointer;
+        font-size: 0.86rem;
+        transition: all 0.15s;
+        width: 100%;
+        font-family: var(--font-body);
+      }
+      .btn-add:hover {
+        border-color: var(--red);
+        color: var(--red);
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: var(--r-pill);
+      }
+      .status-publie {
+        background: rgba(0, 200, 83, 0.1);
+        color: var(--success);
+        border: 1px solid rgba(0, 200, 83, 0.25);
+      }
+      .status-attente {
+        background: rgba(255, 179, 0, 0.1);
+        color: var(--warning);
+        border: 1px solid rgba(255, 179, 0, 0.25);
+      }
+
+      .conv-list-dash {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .conv-item-dash {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+        cursor: pointer;
+        transition: border-color 0.18s;
+      }
+      .conv-item-dash:hover {
+        border-color: rgba(229, 9, 20, 0.3);
+      }
+      .conv-avatar-dash {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--dark3);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 1rem;
+        color: var(--white);
+        overflow: hidden;
+      }
+      .conv-avatar-dash img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .conv-unread-dash {
+        margin-left: auto;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 9px;
+        background: var(--red);
+        color: var(--white);
+        font-size: 0.65rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        flex-shrink: 0;
+      }
+
+      .avis-admin {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .avis-item-admin {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        padding: 14px;
+        background: var(--dark3);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-sm);
+      }
+      .avis-avatar-admin {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: var(--red-pale);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.8rem;
+        color: var(--red);
+      }
+      .dash-empty {
+        text-align: center;
+        padding: 50px 20px;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r);
+      }
+      .dash-empty i {
+        font-size: 2.8rem;
+        color: var(--txt3);
+        display: block;
+        margin-bottom: 14px;
+      }
+      .dash-empty h3 {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 8px;
+      }
+      .dash-empty p {
+        color: var(--txt2);
+        font-size: 0.88rem;
+        margin-bottom: 22px;
+        font-weight: 300;
+      }
+
+      @media (max-width: 900px) {
+        .dash-layout {
+          grid-template-columns: 1fr;
+        }
+        .dash-sidebar {
+          position: static;
+          height: auto;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="toast" id="global-toast"></div>
+
+    <!-- ✅ NAVBAR : liens corrigés depuis /pages/ -->
+    <nav class="navbar scrolled" id="navbar">
+      <a href="../index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
+      <ul class="navbar-links">
+        <li><a href="../index.html">Accueil</a></li>
+        <li><a href="./boutiques.html">Boutiques</a></li>
+        <li>
+          <a href="./message.html"
+            ><i class="ti ti-message-circle"></i> Messages</a
+          >
+        </li>
+      </ul>
+      <div class="navbar-actions" id="navbar-actions"></div>
+    </nav>
+
+    <div class="dash-layout relative">
+      <aside class="dash-sidebar">
+        <div class="dash-user-bloc">
+          <div class="dash-avatar" id="avatar-initiale">—</div>
+          <div class="dash-user-name" id="user-name">Chargement...</div>
+          <div class="dash-user-role">
+            <i class="ti ti-building-store"></i> Vendeur Pro
+          </div>
+        </div>
+        <nav class="dash-nav">
+          <button
+            class="dash-nav-item active"
+            onclick="afficherSection('accueil')"
+          >
+            <i class="ti ti-layout-dashboard"></i> Dashboard
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('infos')">
+            <i class="ti ti-info-circle"></i> Ma boutique
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('horaires')">
+            <i class="ti ti-clock"></i> Horaires
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('galerie')">
+            <i class="ti ti-photo"></i> Photos
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('messages')">
+            <i class="ti ti-message-circle"></i> Messages
+          </button>
+          <button class="dash-nav-item" onclick="afficherSection('avis')">
+            <i class="ti ti-star"></i> Avis clients
+          </button>
+          <div class="dash-nav-sep"></div>
+          <button class="dash-nav-item" onclick="voirProfil()">
+            <i class="ti ti-eye"></i> Voir mon profil
+          </button>
+          <div class="dash-nav-sep"></div>
+          <button class="dash-nav-item danger" onclick="deconnexion()">
+            <i class="ti ti-logout"></i> Déconnexion
+          </button>
+        </nav>
+      </aside>
+
+      <main class="dash-main">
+        <!-- ACCUEIL -->
+        <div id="section-accueil" class="dash-section active">
+          <h1 class="dash-title">Dashboard</h1>
+          <p class="dash-sub">Vue d'ensemble de votre boutique.</p>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-ico"><i class="ti ti-eye"></i></div>
+              <div class="stat-num" id="stat-vues">—</div>
+              <div class="stat-lbl">Vues</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico"><i class="ti ti-star"></i></div>
+              <div class="stat-num" id="stat-note">—</div>
+              <div class="stat-lbl">Note</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico"><i class="ti ti-message-circle"></i></div>
+              <div class="stat-num" id="stat-msgs">—</div>
+              <div class="stat-lbl">Messages</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico"><i class="ti ti-heart"></i></div>
+              <div class="stat-num" id="stat-followers">—</div>
+              <div class="stat-lbl">Followers</div>
+            </div>
+          </div>
+          <div class="section-block">
+            <div class="block-label">
+              <i class="ti ti-info-circle"></i> État de la boutique
+            </div>
+            <div id="status-bloc"></div>
+          </div>
+        </div>
+
+        <!-- INFOS -->
+        <div id="section-infos" class="dash-section">
+          <h1 class="dash-title">Ma boutique</h1>
+          <p class="dash-sub">Modifiez les informations de votre boutique.</p>
+          <div id="alert-infos" class="alert alert-error"></div>
+          <div id="alert-infos-ok" class="alert alert-success"></div>
+
+          <div class="section-block">
+            <div class="block-label">
+              <i class="ti ti-building-store"></i> Identité
+            </div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label">Nom de la boutique *</label
+                ><input
+                  type="text"
+                  id="i-nom"
+                  class="form-input"
+                  placeholder="Ex : Sneaker Palace"
+                />
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Slogan</label
+                ><input
+                  type="text"
+                  id="i-slogan"
+                  class="form-input"
+                  placeholder="Votre tagline..."
+                />
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Description</label
+                ><textarea
+                  id="i-description"
+                  class="form-input"
+                  placeholder="Décrivez votre boutique..."
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Photo de couverture (URL)</label
+                ><input
+                  type="url"
+                  id="i-cover"
+                  class="form-input"
+                  placeholder="https://..."
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Logo (URL)</label
+                ><input
+                  type="url"
+                  id="i-logo"
+                  class="form-input"
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="block-label">
+              <i class="ti ti-map-pin"></i> Localisation
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Quartier *</label
+                ><input
+                  type="text"
+                  id="i-quartier"
+                  class="form-input"
+                  placeholder="Ex : Cocody"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ville</label
+                ><input
+                  type="text"
+                  id="i-ville"
+                  class="form-input"
+                  placeholder="Ex : Abidjan"
+                />
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Adresse complète</label
+                ><input
+                  type="text"
+                  id="i-adresse"
+                  class="form-input"
+                  placeholder="Ex : Rue des Chaussures, immeuble XYZ"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="section-block">
+            <div class="block-label">
+              <i class="ti ti-address-book"></i> Contact
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Téléphone</label>
+                <div class="input-wrap">
+                  <i class="ti ti-phone"></i
+                  ><input type="tel" id="i-telephone" class="form-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">WhatsApp</label>
+                <div class="input-wrap">
+                  <i class="ti ti-brand-whatsapp"></i
+                  ><input type="tel" id="i-whatsapp" class="form-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <div class="input-wrap">
+                  <i class="ti ti-mail"></i
+                  ><input type="email" id="i-email" class="form-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Instagram</label>
+                <div class="input-wrap">
+                  <i class="ti ti-brand-instagram"></i
+                  ><input
+                    type="text"
+                    id="i-instagram"
+                    class="form-input"
+                    placeholder="@maboutique"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-red" onclick="sauvegarderInfos()">
+            <i class="ti ti-device-floppy"></i> Sauvegarder
+          </button>
+        </div>
+
+        <!-- HORAIRES -->
+        <div id="section-horaires" class="dash-section">
+          <h1 class="dash-title">Horaires</h1>
+          <p class="dash-sub">Indiquez vos heures d'ouverture.</p>
+          <div id="alert-horaires" class="alert alert-error"></div>
+          <div id="alert-horaires-ok" class="alert alert-success"></div>
+          <div class="section-block">
+            <div class="block-label">
+              <i class="ti ti-clock"></i> Planning de la semaine
+            </div>
+            <div class="horaires-admin" id="horaires-admin"></div>
+          </div>
+          <button class="btn btn-red" onclick="sauvegarderHoraires()">
+            <i class="ti ti-device-floppy"></i> Sauvegarder
+          </button>
+        </div>
+
+        <!-- GALERIE -->
+        <div id="section-galerie" class="dash-section">
+          <h1 class="dash-title">Photos</h1>
+          <p class="dash-sub">Ajoutez des photos de votre boutique.</p>
+          <div id="alert-galerie" class="alert alert-error"></div>
+          <div id="alert-galerie-ok" class="alert alert-success"></div>
+          <div class="section-block">
+            <div class="block-label">
+              <i class="ti ti-photo"></i> Galerie (URLs d'images)
+            </div>
+            <div class="galerie-list" id="galerie-list"></div>
+            <button class="btn-add" onclick="ajouterUrlGalerie()">
+              <i class="ti ti-plus"></i> Ajouter une photo
+            </button>
+          </div>
+          <button class="btn btn-red" onclick="sauvegarderGalerie()">
+            <i class="ti ti-device-floppy"></i> Sauvegarder
+          </button>
+        </div>
+
+        <!-- MESSAGES -->
+        <div id="section-messages" class="dash-section">
+          <h1 class="dash-title">Messages</h1>
+          <p class="dash-sub">Les conversations avec vos clients.</p>
+          <div class="conv-list-dash" id="conv-list-dash">
+            <div class="spinner"></div>
+          </div>
+        </div>
+
+        <!-- AVIS -->
+        <div id="section-avis" class="dash-section">
+          <h1 class="dash-title">Avis clients</h1>
+          <p class="dash-sub">Ce que pensent vos clients.</p>
+          <div id="avis-container"><div class="spinner"></div></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ✅ Chemins JS corrigés depuis /pages/ -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      let storeActuel = null;
+      const JOURS = [
+        "lundi",
+        "mardi",
+        "mercredi",
+        "jeudi",
+        "vendredi",
+        "samedi",
+        "dimanche",
+      ];
+
+      function afficherSection(nom) {
+        document
+          .querySelectorAll(".dash-section")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".dash-nav-item")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("section-" + nom).classList.add("active");
+        document
+          .querySelector(`[onclick="afficherSection('${nom}')"]`)
+          ?.classList.add("active");
+      }
+
+      function voirProfil() {
+        // ✅ Lien boutique-detail corrigé
+        if (storeActuel)
+          window.open(`./boutique-detail.html?id=${storeActuel._id}`, "_blank");
+      }
+
+      async function chargerBoutique() {
+        try {
+          const { data: s } = await Stores.maBoutique();
+          storeActuel = s;
+          const user = Session.getUser();
+          document.getElementById("user-name").textContent = user?.nom || "—";
+          document.getElementById("avatar-initiale").textContent = (user?.nom ||
+            "S")[0].toUpperCase();
+          document.getElementById("stat-vues").textContent = s.vues || 0;
+          document.getElementById("stat-note").textContent =
+            s.noteGlobale > 0 ? s.noteGlobale.toFixed(1) : "—";
+          document.getElementById("stat-followers").textContent =
+            s.followers || 0;
+
+          document.getElementById("status-bloc").innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            ${
+              s.estPublie
+                ? `<span class="status-badge status-publie"><i class="ti ti-circle-check"></i> Votre boutique est publiée et visible</span>`
+                : `<span class="status-badge status-attente"><i class="ti ti-clock"></i> En attente de validation</span>`
+            }
+            <p style="font-size:.86rem;color:var(--txt2);display:flex;align-items:center;gap:8px;">
+              <i class="ti ti-building-store" style="color:var(--red);"></i>
+              <strong style="color:var(--white);">${s.nom}</strong> · ${s.quartier}
+            </p>
+            <!-- ✅ Lien boutique-detail corrigé dans le HTML injecté -->
+            <a href="./boutique-detail.html?id=${s._id}" class="btn btn-glass btn-sm" style="align-self:flex-start;">
+              <i class="ti ti-eye"></i> Voir le profil public
+            </a>
+          </div>`;
+
+          remplirInfos(s);
+          remplirHoraires(s.horaires || {});
+          remplirGalerie(s.galerie || []);
+          chargerConversations();
+          chargerAvis(s._id);
+          majNavbar();
+        } catch {
+          document.getElementById("status-bloc").innerHTML = `
+          <div class="dash-empty" style="background:none;border:none;">
+            <i class="ti ti-building-store"></i>
+            <h3>Aucune boutique</h3>
+            <p>Remplis le formulaire "Ma boutique" pour créer ta fiche.</p>
+          </div>`;
+          const user = Session.getUser();
+          if (user) {
+            document.getElementById("user-name").textContent = user.nom;
+            document.getElementById("avatar-initiale").textContent =
+              user.nom[0].toUpperCase();
+          }
+          remplirHoraires({});
+          remplirGalerie([]);
+          majNavbar();
+        }
+      }
+
+      function remplirInfos(s) {
+        document.getElementById("i-nom").value = s.nom || "";
+        document.getElementById("i-slogan").value = s.slogan || "";
+        document.getElementById("i-description").value = s.description || "";
+        document.getElementById("i-cover").value = s.coverImage || "";
+        document.getElementById("i-logo").value = s.logo || "";
+        document.getElementById("i-quartier").value = s.quartier || "";
+        document.getElementById("i-ville").value = s.ville || "Abidjan";
+        document.getElementById("i-adresse").value = s.adresse || "";
+        document.getElementById("i-telephone").value = s.telephone || "";
+        document.getElementById("i-whatsapp").value = s.whatsapp || "";
+        document.getElementById("i-email").value = s.email || "";
+        document.getElementById("i-instagram").value = s.instagram || "";
+      }
+
+      async function sauvegarderInfos() {
+        const al = document.getElementById("alert-infos"),
+          ok = document.getElementById("alert-infos-ok");
+        al.classList.remove("show");
+        ok.classList.remove("show");
+        const nom = document.getElementById("i-nom").value.trim();
+        const quartier = document.getElementById("i-quartier").value.trim();
+        if (!nom || !quartier) {
+          al.innerHTML =
+            '<i class="ti ti-alert-circle"></i> Nom et quartier obligatoires.';
+          al.classList.add("show");
+          return;
+        }
+        const payload = {
+          nom,
+          quartier,
+          slogan: document.getElementById("i-slogan").value.trim(),
+          description: document.getElementById("i-description").value.trim(),
+          coverImage: document.getElementById("i-cover").value.trim() || null,
+          logo: document.getElementById("i-logo").value.trim() || null,
+          ville: document.getElementById("i-ville").value.trim() || "Abidjan",
+          adresse: document.getElementById("i-adresse").value.trim(),
+          telephone: document.getElementById("i-telephone").value.trim(),
+          whatsapp: document.getElementById("i-whatsapp").value.trim(),
+          email: document.getElementById("i-email").value.trim(),
+          instagram: document.getElementById("i-instagram").value.trim(),
+        };
+        try {
+          if (storeActuel) {
+            await Stores.modifier(storeActuel._id, payload);
+          } else {
+            const { data } = await Stores.creer(payload);
+            storeActuel = data;
+          }
+          ok.innerHTML =
+            '<i class="ti ti-circle-check"></i> Boutique sauvegardée !';
+          ok.classList.add("show");
+          afficherToast("Sauvegardé !", "success");
+        } catch (err) {
+          al.innerHTML = `<i class="ti ti-alert-circle"></i> ${err.message}`;
+          al.classList.add("show");
+        }
+      }
+
+      function remplirHoraires(horaires) {
+        document.getElementById("horaires-admin").innerHTML = JOURS.map((j) => {
+          const h = horaires[j] || {
+            ouvert: false,
+            debut: "08:00",
+            fin: "18:00",
+          };
+          return `<div class="horaire-row-admin">
+          <span class="horaire-jour-label">${j}</span>
+          <div class="horaire-fields">
+            <label><input type="checkbox" id="h-${j}-ouvert" ${h.ouvert ? "checked" : ""} onchange="toggleHoraire('${j}')"> Ouvert</label>
+            <span id="h-${j}-fields" style="${h.ouvert ? "" : "display:none;"}display:flex;align-items:center;gap:8px;">
+              <input type="time" id="h-${j}-debut" value="${h.debut || "08:00"}">
+              <span style="color:var(--txt3);">—</span>
+              <input type="time" id="h-${j}-fin" value="${h.fin || "18:00"}">
+            </span>
+          </div>
+        </div>`;
+        }).join("");
+      }
+
+      function toggleHoraire(j) {
+        const ouvert = document.getElementById(`h-${j}-ouvert`).checked;
+        document.getElementById(`h-${j}-fields`).style.display = ouvert
+          ? "flex"
+          : "none";
+      }
+
+      async function sauvegarderHoraires() {
+        if (!storeActuel) {
+          afficherToast("Crée d'abord ta boutique", "error");
+          return;
+        }
+        const al = document.getElementById("alert-horaires"),
+          ok = document.getElementById("alert-horaires-ok");
+        al.classList.remove("show");
+        ok.classList.remove("show");
+        const horaires = {};
+        JOURS.forEach((j) => {
+          horaires[j] = {
+            ouvert: document.getElementById(`h-${j}-ouvert`).checked,
+            debut: document.getElementById(`h-${j}-debut`)?.value || "08:00",
+            fin: document.getElementById(`h-${j}-fin`)?.value || "18:00",
+          };
+        });
+        try {
+          await Stores.modifier(storeActuel._id, { horaires });
+          ok.innerHTML =
+            '<i class="ti ti-circle-check"></i> Horaires sauvegardés !';
+          ok.classList.add("show");
+        } catch (err) {
+          al.innerHTML = `<i class="ti ti-alert-circle"></i> ${err.message}`;
+          al.classList.add("show");
+        }
+      }
+
+      function remplirGalerie(urls) {
+        document.getElementById("galerie-list").innerHTML = "";
+        urls.forEach((u) => ajouterUrlGalerie(u));
+      }
+
+      function ajouterUrlGalerie(val = "") {
+        const row = document.createElement("div");
+        row.className = "galerie-url-row";
+        row.innerHTML = `
+        <input type="url" class="form-input galerie-url" placeholder="https://..." value="${val}" style="flex:1;" />
+        <button class="btn-remove-url" onclick="this.closest('.galerie-url-row').remove()"><i class="ti ti-trash"></i></button>`;
+        document.getElementById("galerie-list").appendChild(row);
+      }
+
+      async function sauvegarderGalerie() {
+        if (!storeActuel) {
+          afficherToast("Crée d'abord ta boutique", "error");
+          return;
+        }
+        const al = document.getElementById("alert-galerie"),
+          ok = document.getElementById("alert-galerie-ok");
+        al.classList.remove("show");
+        ok.classList.remove("show");
+        const galerie = [...document.querySelectorAll(".galerie-url")]
+          .map((i) => i.value.trim())
+          .filter(Boolean);
+        try {
+          await Stores.modifier(storeActuel._id, { galerie });
+          ok.innerHTML =
+            '<i class="ti ti-circle-check"></i> Photos sauvegardées !';
+          ok.classList.add("show");
+        } catch (err) {
+          al.innerHTML = `<i class="ti ti-alert-circle"></i> ${err.message}`;
+          al.classList.add("show");
+        }
+      }
+
+      async function chargerConversations() {
+        const el = document.getElementById("conv-list-dash");
+        try {
+          const { data } = await Messages.conversations();
+          document.getElementById("stat-msgs").textContent = data.length;
+          if (!data.length) {
+            el.innerHTML = `<div class="dash-empty"><i class="ti ti-message-off"></i><h3>Aucun message</h3><p>Les clients qui vous contactent apparaîtront ici.</p></div>`;
+            return;
+          }
+          const user = Session.getUser();
+          el.innerHTML = data
+            .map((c) => {
+              const autre =
+                c.participants.find((p) => p._id !== user._id) ||
+                c.participants[0];
+              const nonLus = c.nonLus?.[user._id] || 0;
+              // ✅ Lien message corrigé
+              return `<div class="conv-item-dash" onclick="window.location.href='./message.html?conv=${c._id}'">
+            <div class="conv-avatar-dash">${autre?.avatar ? `<img src="${autre.avatar}" alt="">` : (autre?.nom || "?")[0].toUpperCase()}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:600;font-size:.9rem;color:var(--white);margin-bottom:2px;">${autre?.nom || "Client"}</div>
+              <div style="font-size:.78rem;color:var(--txt3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.dernierMessage?.contenu || "Nouveau message..."}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;">
+              <span style="font-size:.7rem;color:var(--txt3);">${formatDate(c.dernierMessageAt)}</span>
+              ${nonLus > 0 ? `<span class="conv-unread-dash">${nonLus > 9 ? "9+" : nonLus}</span>` : ""}
+            </div>
+          </div>`;
+            })
+            .join("");
+        } catch {
+          el.innerHTML = "";
+        }
+      }
+
+      async function chargerAvis(storeId) {
+        const el = document.getElementById("avis-container");
+        try {
+          const { data } = await Stores.getAvis(storeId);
+          if (!data.length) {
+            el.innerHTML = `<div class="dash-empty"><i class="ti ti-star-off"></i><h3>Aucun avis</h3><p>Les avis de vos clients apparaîtront ici.</p></div>`;
+            return;
+          }
+          el.innerHTML = `<div class="avis-admin">${data
+            .map(
+              (a) => `
+          <div class="avis-item-admin">
+            <div class="avis-avatar-admin">${(a.auteur?.nom || "C")[0].toUpperCase()}</div>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:.86rem;margin-bottom:3px;">${a.auteur?.nom || "Client"}</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <span class="stars">${'<i class="ti ti-star-filled"></i>'.repeat(a.note)}${'<i class="ti ti-star"></i>'.repeat(5 - a.note)}</span>
+                <span style="font-size:.72rem;color:var(--txt3);">${new Date(a.createdAt).toLocaleDateString("fr-FR")}</span>
+              </div>
+              <p style="font-size:.84rem;color:var(--txt2);line-height:1.6;">${a.commentaire}</p>
+            </div>
+          </div>`,
+            )
+            .join("")}</div>`;
+        } catch {
+          el.innerHTML = "";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        if (!protegerPage("seller")) return;
+        chargerBoutique();
+      });
+    </script>
+  </body>
+</html>

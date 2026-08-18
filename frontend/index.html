@@ -1,0 +1,1048 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOLE — Trouvez votre magasin de chaussures</title>
+    <link rel="icon" type="image/svg+xml" href="./logo/logo.jpeg" />
+    <link rel="alternate icon" href="./logo/logo.jpeg" />
+
+    <link rel="stylesheet" href="./css/styles.css" />
+    <style>
+      /* ── LOADER ── */
+      #loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: var(--black);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.6s ease;
+      }
+      #loader.hidden {
+        display: none;
+      }
+      .loader-inner {
+        text-align: center;
+      }
+      .loader-logo {
+        font-family: var(--font-display);
+        font-size: 3.5rem;
+        letter-spacing: 0.18em;
+        color: var(--white);
+        margin-bottom: 36px;
+        animation: fadeUp 0.7s ease both;
+      }
+      .loader-logo span {
+        color: var(--red);
+      }
+      .loader-bar-wrap {
+        width: 200px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 0 auto 12px;
+        overflow: hidden;
+      }
+      .loader-bar {
+        height: 100%;
+        width: 0%;
+        background: var(--red);
+        transition: width 0.05s linear;
+      }
+      .loader-pct {
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--txt3);
+      }
+
+      /* ── CANVAS ── */
+      #hero-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        width: 100vw;
+        height: 100vh;
+        transition: opacity 0.4s;
+      }
+      #particles-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+      }
+
+      /* ── SCROLL CONTAINER ── */
+      #scroll-container {
+        position: relative;
+        z-index: 2;
+        height: 600vh;
+      }
+      .canvas-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background:
+          linear-gradient(
+            to right,
+            rgba(8, 8, 8, 0.75) 0%,
+            rgba(8, 8, 8, 0.2) 60%,
+            transparent 100%
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(8, 8, 8, 0.4) 0%,
+            transparent 20%,
+            transparent 80%,
+            rgba(8, 8, 8, 0.8) 100%
+          );
+      }
+      .canvas-overlay::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at 15% 60%,
+          rgba(229, 9, 20, 0.12) 0%,
+          transparent 60%
+        );
+      }
+
+      /* ── SCENES ── */
+      .scene {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        padding: 0 6%;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .scene-content {
+        max-width: 620px;
+        pointer-events: auto;
+      }
+      .scene-right {
+        margin-left: auto;
+      }
+      .scene-center {
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .scene-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        background: var(--red);
+        color: var(--white);
+        padding: 5px 14px;
+        border-radius: var(--r-pill);
+        margin-bottom: 24px;
+      }
+      .scene-title {
+        font-family: var(--font-display);
+        font-size: clamp(3.5rem, 9vw, 8rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        line-height: 0.95;
+        margin-bottom: 20px;
+      }
+      .scene-title em {
+        color: var(--red);
+        font-style: normal;
+        display: block;
+      }
+      .scene-sub {
+        font-size: 1rem;
+        font-weight: 300;
+        color: var(--txt2);
+        line-height: 1.7;
+        margin-bottom: 32px;
+        max-width: 480px;
+      }
+      .scene-center .scene-sub {
+        margin: 0 auto 32px;
+      }
+      .scene-line {
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--red);
+        margin-bottom: 22px;
+      }
+      .scene-center .scene-line {
+        margin: 0 auto 22px;
+      }
+      .scene-btns {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .scene-center .scene-btns {
+        justify-content: center;
+      }
+
+      /* ── SCROLL HINT ── */
+      #scroll-hint {
+        position: fixed;
+        bottom: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        transition: opacity 0.4s;
+      }
+      #scroll-hint.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .scroll-hint-arrow {
+        width: 32px;
+        height: 32px;
+        border-right: 2px solid var(--red);
+        border-bottom: 2px solid var(--red);
+        transform: rotate(45deg);
+        animation: arrowBounce 1.8s ease-in-out infinite;
+      }
+      .scroll-hint-label {
+        font-family: var(--font-ui);
+        font-size: 0.68rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--txt3);
+      }
+      @keyframes arrowBounce {
+        0%,
+        100% {
+          transform: rotate(45deg) translateY(0);
+        }
+        50% {
+          transform: rotate(45deg) translateY(6px);
+        }
+      }
+
+      /* ── MAIN CONTENT (après scroll zone) ── */
+      #main-content {
+        position: relative;
+        z-index: 5;
+        background: var(--black);
+      }
+
+      /* ── STATS BAR ── */
+      .stats-bar {
+        background: var(--dark);
+        border-top: 1px solid var(--glass-bd);
+        border-bottom: 1px solid var(--glass-bd);
+        padding: 28px 0;
+      }
+      .stats-inner {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+      }
+      .stat-item {
+        text-align: center;
+        border-right: 1px solid var(--glass-bd);
+        padding: 10px 0;
+      }
+      .stat-item:last-child {
+        border-right: none;
+      }
+      .stat-num {
+        font-family: var(--font-display);
+        font-size: 2.4rem;
+        letter-spacing: 0.06em;
+        color: var(--white);
+      }
+      .stat-lbl {
+        font-family: var(--font-ui);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--txt3);
+        margin-top: 2px;
+      }
+
+      /* ── SEARCH BAR HERO ── */
+      .hero-search-wrap {
+        padding: 60px 0;
+        background: var(--black);
+        border-bottom: 1px solid var(--glass-bd);
+      }
+      .hero-search-box {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd2);
+        border-radius: var(--r-pill);
+        padding: 6px 6px 6px 24px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+        max-width: 680px;
+        margin: 0 auto;
+      }
+      .hero-search-box i {
+        color: var(--red);
+        font-size: 1.1rem;
+        margin-right: 8px;
+        flex-shrink: 0;
+      }
+      .hero-search-box input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        font-family: var(--font-body);
+        font-size: 1rem;
+        color: var(--white);
+        padding: 10px 0;
+      }
+      .hero-search-box input::placeholder {
+        color: var(--txt3);
+      }
+      .search-divider {
+        width: 1px;
+        height: 32px;
+        background: var(--glass-bd);
+        margin: 0 16px;
+      }
+      .hero-search-box select {
+        background: none;
+        border: none;
+        outline: none;
+        color: var(--txt2);
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        cursor: pointer;
+        width: 180px;
+      }
+      .hero-search-box select option {
+        background: var(--dark2);
+      }
+
+      /* ── QUARTIERS ── */
+      .quartiers-scroll {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        scrollbar-width: none;
+      }
+      .quartiers-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .quartier-chip {
+        flex-shrink: 0;
+        font-family: var(--font-ui);
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 10px 22px;
+        border-radius: var(--r-pill);
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        color: var(--txt2);
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .quartier-chip:hover,
+      .quartier-chip.active {
+        background: var(--red-pale);
+        border-color: rgba(229, 9, 20, 0.4);
+        color: var(--red);
+      }
+
+      /* ── COMMENT CA MARCHE ── */
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .step-card {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-lg);
+        padding: 32px 28px;
+        text-align: center;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .step-card:hover {
+        border-color: rgba(229, 9, 20, 0.3);
+        transform: translateY(-4px);
+      }
+      .step-num {
+        font-family: var(--font-display);
+        font-size: 4rem;
+        letter-spacing: 0.04em;
+        color: var(--red);
+        opacity: 0.25;
+        line-height: 1;
+        margin-bottom: 16px;
+      }
+      .step-ico {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: var(--red-pale);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+      }
+      .step-ico i {
+        font-size: 1.4rem;
+        color: var(--red);
+      }
+      .step-title {
+        font-family: var(--font-ui);
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 10px;
+      }
+      .step-desc {
+        font-size: 0.88rem;
+        color: var(--txt2);
+        line-height: 1.65;
+        font-weight: 300;
+      }
+
+      /* ── CTA VENDEUR ── */
+      .cta-vendeur {
+        background: linear-gradient(135deg, var(--dark2) 0%, var(--dark3) 100%);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-lg);
+        padding: 70px 60px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 40px;
+      }
+
+      /* ── SCROLL PROGRESS ── */
+      #scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        height: 2px;
+        width: 0%;
+        background: var(--red);
+      }
+
+      /* ── NOTIF BADGE ── */
+      .notif-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 9px;
+        background: var(--red);
+        color: var(--white);
+        font-family: var(--font-ui);
+        font-size: 0.62rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--black);
+      }
+      .btn-icon {
+        position: relative;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (max-width: 768px) {
+        .stats-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+        .steps-grid {
+          grid-template-columns: 1fr;
+        }
+        .cta-vendeur {
+          grid-template-columns: 1fr;
+          text-align: center;
+          padding: 40px 28px;
+        }
+        .scene {
+          padding: 0 5%;
+        }
+        .hero-search-box {
+          flex-direction: column;
+          padding: 16px;
+          border-radius: var(--r);
+        }
+        .search-divider {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="toast" id="global-toast"></div>
+
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="loader-inner">
+        <div class="loader-logo">SOL<span>E</span></div>
+        <div class="loader-bar-wrap">
+          <div class="loader-bar" id="loader-bar"></div>
+        </div>
+        <div class="loader-pct" id="loader-pct">0%</div>
+      </div>
+    </div>
+
+    <!-- SCROLL PROGRESS -->
+    <div id="scroll-progress"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+      <a href="./index.html" class="navbar-logo">
+        <span class="logo-dot"></span> SOLE
+      </a>
+      <ul class="navbar-links">
+        <li><a href="./index.html" class="active">Accueil</a></li>
+        <li><a href="./pages/boutiques.html">Boutiques</a></li>
+        <li>
+          <a href="./pages/message.html"
+            ><i class="ti ti-message-circle"></i> Messages</a
+          >
+        </li>
+      </ul>
+      <div class="navbar-actions" id="navbar-actions"></div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="./index.html" class="active"
+        ><i class="ti ti-home"></i> Accueil</a
+      >
+      <a href="./pages/boutiques.html"
+        ><i class="ti ti-building-store"></i> Boutiques</a
+      >
+      <a href="./pages/message.html"
+        ><i class="ti ti-message-circle"></i> Messages</a
+      >
+      <a href="./pages/auth.html?mode=connexion"
+        ><i class="ti ti-login"></i> Connexion</a
+      >
+      <a href="./pages/auth.html?mode=inscription"
+        ><i class="ti ti-user-plus"></i> S'inscrire</a
+      >
+    </div>
+
+    <!-- CANVAS HERO -->
+    <canvas id="hero-canvas"></canvas>
+
+    <!-- SCROLL CONTAINER 600vh -->
+    <div id="scroll-container" style="height: 600vh; position: relative">
+      <div class="canvas-overlay"></div>
+
+      <!-- Section 1 — Accueil -->
+      <div class="scene" id="scene-1">
+        <div class="scene-content">
+          <div class="scene-badge">
+            <i class="ti ti-map-pin"></i> Abidjan, Côte d'Ivoire
+          </div>
+          <h1 class="scene-title">Find your<br /><em>next pair.</em></h1>
+          <p class="scene-sub">
+            Découvrez les meilleures boutiques de chaussures près de chez vous.
+            Contactez le propriétaire directement.
+          </p>
+          <span class="scene-line"></span>
+          <div class="scene-btns">
+            <a href="./pages/boutiques.html" class="btn btn-red btn-lg"
+              ><i class="ti ti-search"></i> Explorer</a
+            >
+            <a href="#main-content" class="btn btn-glass btn-lg"
+              ><i class="ti ti-building-store"></i> Voir les boutiques</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 — Concept -->
+      <div class="scene" id="scene-2">
+        <div class="scene-content scene-right">
+          <div class="scene-badge"><i class="ti ti-shoe"></i> Concept</div>
+          <h2 class="scene-title">Trouve.<em>Contacte.</em></h2>
+          <p class="scene-sub">
+            Plus besoin de chercher partout. Trouve ta boutique, consulte son
+            profil, envoie un message direct au propriétaire.
+          </p>
+          <span class="scene-line"></span>
+        </div>
+      </div>
+
+      <!-- Section 3 — Quartiers -->
+      <div class="scene" id="scene-3">
+        <div class="scene-content">
+          <div class="scene-badge"><i class="ti ti-map"></i> Localisation</div>
+          <h2 class="scene-title">Près de<em>chez vous.</em></h2>
+          <p class="scene-sub">
+            Cocody, Marcory, Yopougon, Plateau, Zone 4 — trouvez les boutiques
+            dans votre quartier.
+          </p>
+          <span class="scene-line"></span>
+          <a href="./pages/boutiques.html" class="btn btn-red"
+            ><i class="ti ti-map-pin"></i> Chercher par quartier</a
+          >
+        </div>
+      </div>
+
+      <!-- Section 4 — Messages -->
+      <div class="scene" id="scene-4">
+        <div class="scene-content scene-right">
+          <div class="scene-badge">
+            <i class="ti ti-message-circle"></i> Messagerie
+          </div>
+          <h2 class="scene-title">Parlez<em>direct.</em></h2>
+          <p class="scene-sub">
+            Posez vos questions directement au propriétaire. Taille disponible ?
+            Prix ? Horaires ? Tout en quelques secondes.
+          </p>
+          <span class="scene-line"></span>
+          <a href="./pages/auth.html?mode=inscription" class="btn btn-red"
+            ><i class="ti ti-user-plus"></i> Créer un compte</a
+          >
+        </div>
+      </div>
+
+      <!-- Section 5 — CTA final -->
+      <div class="scene" id="scene-5">
+        <div class="scene-content scene-center">
+          <div class="scene-badge" style="margin: 0 auto 24px">
+            <i class="ti ti-sparkles"></i> SOLE Sneakers CI
+          </div>
+          <h2 class="scene-title">Step<em>up.</em></h2>
+          <p class="scene-sub">
+            Rejoignez la communauté. Trouvez votre prochaine paire.
+          </p>
+          <span class="scene-line"></span>
+          <div class="scene-btns">
+            <a href="./pages/boutiques.html" class="btn btn-red btn-lg"
+              ><i class="ti ti-building-store"></i> Voir les boutiques</a
+            >
+            <a
+              href="./pages/auth.html?mode=inscription"
+              class="btn btn-white btn-lg"
+              ><i class="ti ti-user-plus"></i> S'inscrire gratuitement</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /scroll-container -->
+
+    <!-- SCROLL HINT -->
+    <div id="scroll-hint">
+      <div class="scroll-hint-arrow"></div>
+      <span class="scroll-hint-label">Défiler</span>
+    </div>
+
+    <!-- ══════ MAIN CONTENT ══════ -->
+    <div id="main-content">
+      <!-- STATS -->
+      <div class="stats-bar">
+        <div class="container">
+          <div class="stats-inner">
+            <div class="stat-item rv">
+              <div class="stat-num" id="stat-boutiques">—</div>
+              <div class="stat-lbl">Boutiques</div>
+            </div>
+            <div class="stat-item rv delay-1">
+              <div class="stat-num" id="stat-quartiers">—</div>
+              <div class="stat-lbl">Quartiers</div>
+            </div>
+            <div class="stat-item rv delay-2">
+              <div class="stat-num">100%</div>
+              <div class="stat-lbl">Gratuit</div>
+            </div>
+            <div class="stat-item rv delay-3">
+              <div class="stat-num">
+                <i class="ti ti-message-circle" style="color: var(--red)"></i>
+              </div>
+              <div class="stat-lbl">Chat direct</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECHERCHE -->
+      <div class="hero-search-wrap">
+        <div class="container">
+          <div class="hero-search-box">
+            <i class="ti ti-search"></i>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Rechercher une boutique de chaussures..."
+              onkeydown="if (event.key === 'Enter') lancerRecherche();"
+            />
+            <span class="search-divider"></span>
+            <select id="quartier-select">
+              <option value="">Tous les quartiers</option>
+            </select>
+            <button class="btn btn-red" onclick="lancerRecherche()">
+              <i class="ti ti-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUARTIERS -->
+      <section class="section" style="padding: 60px 0 0">
+        <div class="container">
+          <div class="section-header rv">
+            <div class="section-eyebrow">Explorer par zone</div>
+            <h2 class="section-title">Votre <em>quartier</em></h2>
+            <p class="section-sub">
+              Sélectionnez votre zone pour trouver les boutiques près de vous.
+            </p>
+          </div>
+          <div class="quartiers-scroll" id="quartiers-grid">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BOUTIQUES POPULAIRES -->
+      <section class="section">
+        <div class="container">
+          <div
+            class="section-header rv"
+            style="
+              display: flex;
+              align-items: flex-end;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              gap: 16px;
+            "
+          >
+            <div>
+              <div class="section-eyebrow">Les mieux notées</div>
+              <h2 class="section-title">Boutiques <em>populaires</em></h2>
+            </div>
+            <a href="./pages/boutiques.html" class="btn btn-glass"
+              >Voir tout <i class="ti ti-arrow-right"></i
+            ></a>
+          </div>
+          <div class="stores-grid" id="stores-grid">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMMENT ÇA MARCHE -->
+      <section
+        class="section"
+        style="
+          background: var(--dark);
+          border-top: 1px solid var(--glass-bd);
+          border-bottom: 1px solid var(--glass-bd);
+        "
+      >
+        <div class="container">
+          <div class="section-header center rv">
+            <div class="section-eyebrow">Simple & rapide</div>
+            <h2 class="section-title">Comment ça <em>marche</em></h2>
+          </div>
+          <div class="steps-grid">
+            <div class="step-card rv">
+              <div class="step-num">01</div>
+              <div class="step-ico"><i class="ti ti-search"></i></div>
+              <div class="step-title">Cherche</div>
+              <p class="step-desc">
+                Recherche une boutique par quartier, nom ou type de chaussures
+                dans Abidjan.
+              </p>
+            </div>
+            <div class="step-card rv delay-1">
+              <div class="step-num">02</div>
+              <div class="step-ico"><i class="ti ti-building-store"></i></div>
+              <div class="step-title">Découvre</div>
+              <p class="step-desc">
+                Consulte le profil de la boutique : photos, horaires,
+                localisation, avis clients.
+              </p>
+            </div>
+            <div class="step-card rv delay-2">
+              <div class="step-num">03</div>
+              <div class="step-ico"><i class="ti ti-message-circle"></i></div>
+              <div class="step-title">Contacte</div>
+              <p class="step-desc">
+                Envoie un message direct au propriétaire. Demande les
+                disponibilités, le prix, les tailles.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA VENDEUR -->
+      <section class="section">
+        <div class="container">
+          <div class="cta-vendeur rv">
+            <div>
+              <div class="section-eyebrow">Vous êtes vendeur ?</div>
+              <h2
+                class="section-title"
+                style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 16px"
+              >
+                Donnez de la <em>visibilité</em><br />à votre boutique.
+              </h2>
+              <p
+                style="
+                  color: var(--txt2);
+                  font-size: 0.95rem;
+                  font-weight: 300;
+                  max-width: 480px;
+                  line-height: 1.7;
+                "
+              >
+                Créez votre profil boutique gratuitement et commencez à recevoir
+                des messages de clients qui veulent vos chaussures.
+              </p>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-end;
+              "
+            >
+              <a
+                href="./pages/auth.html?mode=inscription&role=seller"
+                class="btn btn-red btn-lg"
+              >
+                <i class="ti ti-building-store"></i> Créer ma boutique
+              </a>
+              <span style="font-size: 0.78rem; color: var(--txt3)"
+                >100% gratuit · Sans engagement</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-brand">
+              <div class="footer-brand-name">
+                <span class="logo-dot"></span> SOLE
+              </div>
+              <p>
+                La plateforme de référence pour trouver les meilleures boutiques
+                de chaussures en Côte d'Ivoire.
+              </p>
+            </div>
+            <div class="footer-col">
+              <h4>Découvrir</h4>
+              <a href="./pages/boutiques.html"
+                ><i class="ti ti-building-store"></i> Toutes les boutiques</a
+              >
+            </div>
+            <div class="footer-col">
+              <h4>Compte</h4>
+              <a href="./pages/auth.html?mode=inscription"
+                ><i class="ti ti-user-plus"></i> S'inscrire</a
+              >
+              <a href="./pages/auth.html?mode=connexion"
+                ><i class="ti ti-login"></i> Se connecter</a
+              >
+              <a href="./pages/message.html"
+                ><i class="ti ti-message-circle"></i> Messages</a
+              >
+              <a href="./pages/dashboard-client.html"
+                ><i class="ti ti-layout-dashboard"></i> Mon espace</a
+              >
+            </div>
+            <div class="footer-col">
+              <h4>Vendeurs</h4>
+              <a href="./pages/auth.html?mode=inscription&role=seller"
+                ><i class="ti ti-building-store"></i> Inscrire ma boutique</a
+              >
+              <a href="./pages/dashboard-vendeur.html"
+                ><i class="ti ti-settings"></i> Espace pro</a
+              >
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>© 2025 SOLE Sneakers CI. Tous droits réservés.</span>
+            <span>Fait avec <i class="ti ti-heart"></i> pour Abidjan</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- /main-content -->
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/scroll.js"></script>
+    <script>
+      // ── Init GSAP scenes ──────────────────────────────
+      function initScenes() {
+        if (typeof gsap === "undefined") return;
+        gsap.registerPlugin(ScrollTrigger);
+        const container = document.getElementById("scroll-container");
+        const totalH = container.offsetHeight - window.innerHeight;
+
+        [
+          { id: "#scene-1", from: 0, to: 0.18 },
+          { id: "#scene-2", from: 0.2, to: 0.38 },
+          { id: "#scene-3", from: 0.4, to: 0.58 },
+          { id: "#scene-4", from: 0.6, to: 0.78 },
+          { id: "#scene-5", from: 0.8, to: 1.0 },
+        ].forEach(({ id, from, to }) => {
+          const el = document.querySelector(id);
+          if (!el) return;
+          const fadeEls = [
+            ...el.querySelectorAll(
+              ".scene-badge,.scene-title,.scene-sub,.scene-line,.scene-btns,.btn",
+            ),
+          ];
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: container,
+                start: () => `top+=${from * totalH}px top`,
+                end: () => `top+=${to * totalH}px top`,
+                scrub: 1,
+                onEnter: () => {
+                  el.style.opacity = "1";
+                  el.style.visibility = "visible";
+                },
+                onLeave: () => {
+                  el.style.opacity = "0";
+                  el.style.visibility = "hidden";
+                },
+                onEnterBack: () => {
+                  el.style.opacity = "1";
+                  el.style.visibility = "visible";
+                },
+                onLeaveBack: () => {
+                  el.style.opacity = "0";
+                  el.style.visibility = "hidden";
+                },
+              },
+            })
+            .fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.2 })
+            .fromTo(
+              fadeEls,
+              { opacity: 0, y: 28 },
+              { opacity: 1, y: 0, stagger: 0.05, duration: 0.25 },
+            )
+            .to(el, { opacity: 0, duration: 0.2 }, "+=0.35");
+        });
+      }
+
+      // ── Charger les quartiers ─────────────────────────
+      async function chargerQuartiers() {
+        try {
+          const { data } = await Stores.quartiers();
+          const select = document.getElementById("quartier-select");
+          const grid = document.getElementById("quartiers-grid");
+
+          data.forEach((q) => {
+            select.insertAdjacentHTML(
+              "beforeend",
+              `<option value="${q}">${q}</option>`,
+            );
+          });
+
+          document.getElementById("stat-quartiers").textContent = data.length;
+          grid.innerHTML = data.length
+            ? data
+                .map(
+                  (q) => `
+            <button class="quartier-chip" onclick="window.location.href='./pages/boutiques.html?quartier=${encodeURIComponent(q)}'">
+              <i class="ti ti-map-pin"></i> ${q}
+            </button>`,
+                )
+                .join("")
+            : '<p style="color:var(--txt3)">Aucun quartier disponible.</p>';
+
+          grid.querySelectorAll(".rv").forEach((el) => rvObs.observe(el));
+        } catch {}
+      }
+
+      // ── Charger les boutiques populaires ─────────────
+      async function chargerBoutiques() {
+        const el = document.getElementById("stores-grid");
+        try {
+          const { data, total } = await Stores.liste({ tri: "note", limit: 6 });
+          document.getElementById("stat-boutiques").textContent = total;
+          el.innerHTML = data.length
+            ? data.map(renderStoreCard).join("")
+            : '<p style="color:var(--txt3)">Aucune boutique disponible pour l\'instant.</p>';
+          el.querySelectorAll(".rv").forEach((e) => rvObs.observe(e));
+        } catch {
+          el.innerHTML = "";
+        }
+      }
+
+      // ── Recherche ─────────────────────────────────────
+      function lancerRecherche() {
+        const q = document.getElementById("search-input").value.trim();
+        const quartier = document.getElementById("quartier-select").value;
+        const params = new URLSearchParams();
+        if (q) params.set("q", q);
+        if (quartier) params.set("quartier", quartier);
+        window.location.href = `./pages/boutiques.html?${params.toString()}`;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        chargerQuartiers();
+        chargerBoutiques();
+        setTimeout(initScenes, 200);
+      });
+    </script>
+  </body>
+</html>

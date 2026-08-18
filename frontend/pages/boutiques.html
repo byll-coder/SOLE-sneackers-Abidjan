@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boutiques — SOLE</title>
+    <link rel="icon" type="image/svg+xml" href="../logo/logo.jpeg" />
+    <link rel="alternate icon" href="../logo/logo.jpeg" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+      .page-hero {
+        padding: 120px 0 60px;
+        position: relative;
+        z-index: 1;
+        background: linear-gradient(
+          to bottom,
+          var(--dark) 0%,
+          var(--black) 100%
+        );
+        border-bottom: 1px solid var(--glass-bd);
+      }
+      .page-title {
+        font-family: var(--font-display);
+        font-size: clamp(3rem, 7vw, 6rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        line-height: 0.95;
+      }
+      .page-title em {
+        color: var(--red);
+        font-style: normal;
+      }
+      .page-sub {
+        color: var(--txt2);
+        font-size: 0.95rem;
+        margin-top: 14px;
+        font-weight: 300;
+      }
+
+      /* Filtres sticky */
+      .filtres-bar {
+        position: sticky;
+        top: 70px;
+        z-index: 100;
+        background: rgba(8, 8, 8, 0.92);
+        backdrop-filter: blur(24px);
+        border-bottom: 1px solid var(--glass-bd);
+        padding: 14px 0;
+      }
+      .filtres-inner {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .search-bar {
+        flex: 1;
+        min-width: 220px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd2);
+        border-radius: var(--r-pill);
+        padding: 10px 18px;
+      }
+      .search-bar i {
+        color: var(--txt3);
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+      .search-bar input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        color: var(--white);
+      }
+      .search-bar input::placeholder {
+        color: var(--txt3);
+      }
+
+      .filtre-select {
+        padding: 10px 34px 10px 16px;
+        background: var(--dark2)
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23E50914' d='M6 8L1 3h10z'/%3E%3C/svg%3E")
+          no-repeat right 12px center;
+        border: 1px solid var(--glass-bd2);
+        border-radius: var(--r-pill);
+        color: var(--txt2);
+        font-family: var(--font-body);
+        font-size: 0.86rem;
+        cursor: pointer;
+        appearance: none;
+        transition: border-color 0.15s;
+      }
+      .filtre-select:focus {
+        outline: none;
+        border-color: var(--red);
+      }
+      .filtre-select.actif {
+        border-color: var(--red);
+        color: var(--red);
+        background-color: var(--red-pale);
+      }
+
+      .btn-reset {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.8rem;
+        color: var(--txt3);
+        text-decoration: underline;
+        padding: 8px 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        font-family: var(--font-body);
+      }
+      .btn-reset:hover {
+        color: var(--red);
+      }
+
+      .resultats-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .resultats-count {
+        color: var(--txt2);
+        font-size: 0.88rem;
+      }
+      .resultats-count strong {
+        color: var(--red);
+        font-family: var(--font-ui);
+      }
+
+      .tri-select {
+        background: var(--dark2);
+        border: 1px solid var(--glass-bd);
+        border-radius: var(--r-pill);
+        padding: 8px 32px 8px 14px;
+        color: var(--txt2);
+        font-family: var(--font-body);
+        font-size: 0.82rem;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        grid-column: 1/-1;
+      }
+      .empty-state i {
+        font-size: 3.5rem;
+        color: var(--txt3);
+        display: block;
+        margin-bottom: 20px;
+      }
+      .empty-state h3 {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+        margin-bottom: 10px;
+      }
+      .empty-state p {
+        color: var(--txt2);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="toast" id="global-toast"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar scrolled" id="navbar">
+      <a href="../index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
+      <ul class="navbar-links">
+        <li><a href="../index.html">Accueil</a></li>
+        <li><a href="../pages/boutiques.html" class="active">Boutiques</a></li>
+        <li>
+          <a href="../pages/message.html"
+            ><i class="ti ti-message-circle"></i> Messages</a
+          >
+        </li>
+      </ul>
+      <div class="navbar-actions" id="navbar-actions"></div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="../index.html"><i class="ti ti-home"></i> Accueil</a>
+      <a href="../pages/boutiques.html" class="active"
+        ><i class="ti ti-building-store"></i> Boutiques</a
+      >
+      <a href="../pages/message.html"
+        ><i class="ti ti-message-circle"></i> Messages</a
+      >
+      <a href="../pages/auth.html?mode=connexion"
+        ><i class="ti ti-login"></i> Connexion</a
+      >
+    </div>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="container relative">
+        <div class="section-eyebrow fade-up">
+          <i class="ti ti-building-store"></i> Découvrir
+        </div>
+        <h1 class="page-title fade-up delay-1">
+          Toutes les <em>boutiques</em>
+        </h1>
+        <p class="page-sub fade-up delay-2">
+          Trouvez le magasin de chaussures parfait dans votre quartier à
+          Abidjan.
+        </p>
+      </div>
+    </div>
+
+    <!-- FILTRES STICKY -->
+    <div class="filtres-bar">
+      <div class="container">
+        <div class="filtres-inner">
+          <div class="search-bar">
+            <i class="ti ti-search"></i>
+            <input
+              type="text"
+              id="search-q"
+              placeholder="Nom de la boutique..."
+              oninput="onSearchInput()"
+            />
+          </div>
+          <select
+            class="filtre-select"
+            id="f-quartier"
+            onchange="appliquerFiltres()"
+          >
+            <option value="">Tous les quartiers</option>
+          </select>
+          <select
+            class="filtre-select"
+            id="f-tri"
+            onchange="appliquerFiltres()"
+          >
+            <option value="recent">Plus récentes</option>
+            <option value="note">Mieux notées</option>
+            <option value="vues">Plus consultées</option>
+            <option value="followers">Plus suivies</option>
+          </select>
+          <button class="btn btn-reset" onclick="reinitialiser()">
+            <i class="ti ti-x"></i> Réinitialiser
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RÉSULTATS -->
+    <section class="section" style="padding-top: 40px">
+      <div class="container relative">
+        <div class="resultats-header">
+          <p class="resultats-count" id="count-txt"></p>
+          <select
+            class="tri-select"
+            id="f-tri2"
+            onchange="
+              document.getElementById('f-tri').value = this.value;
+              appliquerFiltres();
+            "
+          >
+            <option value="recent">Plus récentes</option>
+            <option value="note">Mieux notées</option>
+            <option value="vues">Plus consultées</option>
+            <option value="followers">Plus suivies</option>
+          </select>
+        </div>
+        <div class="stores-grid" id="stores-grid">
+          <div class="spinner"></div>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <div class="footer-bottom">
+          <span>© 2025 SOLE Sneakers CI</span>
+          <a
+            href="../index.html"
+            style="
+              color: var(--red);
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            "
+          >
+            <i class="ti ti-arrow-left"></i> Retour à l'accueil
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      let searchTimer = null;
+      function onSearchInput() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => appliquerFiltres(), 380);
+      }
+
+      function lireParamsURL() {
+        const p = new URLSearchParams(window.location.search);
+        if (p.get("quartier"))
+          document.getElementById("f-quartier").value = p.get("quartier");
+        if (p.get("q")) document.getElementById("search-q").value = p.get("q");
+      }
+
+      async function chargerQuartiers() {
+        try {
+          const { data } = await Stores.quartiers();
+          const sel = document.getElementById("f-quartier");
+          data.forEach((q) =>
+            sel.insertAdjacentHTML(
+              "beforeend",
+              `<option value="${q}">${q}</option>`,
+            ),
+          );
+          const p = new URLSearchParams(window.location.search);
+          if (p.get("quartier")) sel.value = p.get("quartier");
+        } catch {}
+      }
+
+      function majActifs() {
+        const q = document.getElementById("f-quartier");
+        if (q) q.classList.toggle("actif", !!q.value);
+      }
+
+      async function chargerBoutiques(page = 1) {
+        const grid = document.getElementById("stores-grid");
+        grid.innerHTML = '<div class="spinner"></div>';
+        majActifs();
+
+        const params = { page, limit: 12 };
+        const tri = document.getElementById("f-tri").value;
+        const quartier = document.getElementById("f-quartier").value;
+        const q = document.getElementById("search-q").value.trim();
+        if (tri) params.tri = tri;
+        if (quartier) params.quartier = quartier;
+        if (q) params.q = q;
+
+        try {
+          const { data, total, pages } = await Stores.liste(params);
+          document.getElementById("count-txt").innerHTML =
+            `<strong>${total}</strong> boutique${total > 1 ? "s" : ""} trouvée${total > 1 ? "s" : ""}`;
+
+          grid.innerHTML = data.length
+            ? data.map(renderStoreCard).join("")
+            : `<div class="empty-state">
+               <i class="ti ti-building-store"></i>
+               <h3>Aucune boutique trouvée</h3>
+               <p>Essaie de modifier tes filtres ou de changer de quartier.</p>
+             </div>`;
+
+          grid
+            .querySelectorAll(".rv:not(.visible)")
+            .forEach((el) => rvObs.observe(el));
+          renderPagination("pagination", page, pages, (p) =>
+            chargerBoutiques(p),
+          );
+        } catch (err) {
+          grid.innerHTML = `<div class="empty-state">
+          <i class="ti ti-alert-triangle"></i>
+          <h3>Erreur</h3>
+          <p>${err.message}</p>
+        </div>`;
+        }
+      }
+
+      function appliquerFiltres() {
+        chargerBoutiques(1);
+      }
+
+      function reinitialiser() {
+        document.getElementById("f-quartier").value = "";
+        document.getElementById("f-tri").value = "recent";
+        document.getElementById("search-q").value = "";
+        chargerBoutiques(1);
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        lireParamsURL();
+        await chargerQuartiers();
+        chargerBoutiques(1);
+      });
+    </script>
+  </body>
+</html>
