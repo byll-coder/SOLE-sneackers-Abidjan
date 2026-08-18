@@ -2,8 +2,8 @@
 const API_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
-    ? "https://sole-sneackers-abidjan.onrender.com/api"
-    : "/api";
+    ? "http://localhost:5001/api"
+    : "https://sole-sneackers-abidjan.onrender.com/api";
 
 // ── Helper fetch ──────────────────────────────────
 async function apiFetch(endpoint, options = {}) {
