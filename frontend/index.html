@@ -6,7 +6,6 @@
     <title>SOLE — Trouvez votre magasin de chaussures</title>
     <link rel="icon" type="image/svg+xml" href="./logo/logo.jpeg" />
     <link rel="alternate icon" href="./logo/logo.jpeg" />
-
     <link rel="stylesheet" href="./css/styles.css" />
     <style>
       /* ── LOADER ── */
@@ -238,7 +237,7 @@
         }
       }
 
-      /* ── MAIN CONTENT (après scroll zone) ── */
+      /* ── MAIN CONTENT ── */
       #main-content {
         position: relative;
         z-index: 5;
@@ -314,6 +313,7 @@
         font-size: 1rem;
         color: var(--white);
         padding: 10px 0;
+        min-width: 0;
       }
       .hero-search-box input::placeholder {
         color: var(--txt3);
@@ -323,6 +323,7 @@
         height: 32px;
         background: var(--glass-bd);
         margin: 0 16px;
+        flex-shrink: 0;
       }
       .hero-search-box select {
         background: none;
@@ -333,6 +334,7 @@
         font-size: 0.9rem;
         cursor: pointer;
         width: 180px;
+        flex-shrink: 0;
       }
       .hero-search-box select option {
         background: var(--dark2);
@@ -371,7 +373,7 @@
         color: var(--red);
       }
 
-      /* ── COMMENT CA MARCHE ── */
+      /* ── COMMENT ÇA MARCHE ── */
       .steps-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -486,28 +488,180 @@
           transform: translateY(0);
         }
       }
+
+      /* ══════════════════════════════════════════
+         MOBILE — tous les problèmes réglés
+      ══════════════════════════════════════════ */
       @media (max-width: 768px) {
-        .stats-inner {
-          grid-template-columns: 1fr 1fr;
+        /* ── HERO SCROLL : désactiver sur mobile ──
+           Les scènes GSAP fixed + 600vh scrollent mal.
+           On masque tout le scroll-container et on
+           affiche un hero statique à la place. */
+        #scroll-container,
+        #scroll-hint,
+        #particles-canvas,
+        #hero-canvas {
+          display: none !important;
         }
-        .steps-grid {
-          grid-template-columns: 1fr;
+
+        /* Hero mobile statique */
+        #mobile-hero {
+          display: flex !important;
+          flex-direction: column;
+          justify-content: center;
+          min-height: 100svh;
+          padding: 90px 24px 48px;
+          background: var(--black);
+          position: relative;
+          overflow: hidden;
         }
-        .cta-vendeur {
-          grid-template-columns: 1fr;
+        #mobile-hero::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            ellipse at 20% 60%,
+            rgba(229, 9, 20, 0.15) 0%,
+            transparent 65%
+          );
+          pointer-events: none;
+        }
+        #mobile-hero .scene-badge {
+          margin-bottom: 20px;
+        }
+        #mobile-hero .scene-title {
+          /* Taille réduite pour tenir sur 375px */
+          font-size: clamp(2.8rem, 14vw, 4.5rem);
+          margin-bottom: 16px;
+        }
+        #mobile-hero .scene-sub {
+          font-size: 0.93rem;
+          margin-bottom: 28px;
+          max-width: 100%;
+        }
+        #mobile-hero .scene-btns {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        #mobile-hero .scene-btns .btn {
           text-align: center;
-          padding: 40px 28px;
+          justify-content: center;
         }
-        .scene {
-          padding: 0 5%;
+
+        /* ── STATS BAR : 2×2 propre ── */
+        .stats-inner {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        /* Ajouter bordure basse sur les 2 premiers items */
+        .stat-item:nth-child(1),
+        .stat-item:nth-child(2) {
+          border-bottom: 1px solid var(--glass-bd);
+          padding-bottom: 18px;
+        }
+        .stat-item:nth-child(3),
+        .stat-item:nth-child(4) {
+          padding-top: 18px;
+        }
+        /* Retirer la bordure droite du 2e et 4e (fin de ligne) */
+        .stat-item:nth-child(2),
+        .stat-item:nth-child(4) {
+          border-right: none;
+        }
+        .stat-num {
+          font-size: 2rem;
+        }
+        .stat-lbl {
+          font-size: 0.65rem;
+        }
+
+        /* ── SEARCH BOX : colonne propre ── */
+        .hero-search-wrap {
+          padding: 36px 0;
         }
         .hero-search-box {
           flex-direction: column;
           padding: 16px;
           border-radius: var(--r);
+          gap: 12px;
+          align-items: stretch;
+        }
+        .hero-search-box > * {
+          width: 100%;
+        }
+        .hero-search-box i {
+          display: none;
+        }
+        .hero-search-box input {
+          background: var(--dark3);
+          border: 1px solid var(--glass-bd);
+          border-radius: var(--r);
+          padding: 12px 14px;
+          font-size: 0.95rem;
         }
         .search-divider {
           display: none;
+        }
+        .hero-search-box select {
+          width: 100%;
+          background: var(--dark3);
+          border: 1px solid var(--glass-bd);
+          border-radius: var(--r);
+          padding: 12px 14px;
+          color: var(--txt2);
+          font-size: 0.95rem;
+        }
+        .hero-search-box .btn {
+          width: 100%;
+          justify-content: center;
+          padding: 12px;
+        }
+
+        /* ── STEPS : colonne unique ── */
+        .steps-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .step-card {
+          padding: 24px 20px;
+        }
+
+        /* ── CTA VENDEUR : colonne, centré ── */
+        .cta-vendeur {
+          grid-template-columns: 1fr;
+          text-align: center;
+          padding: 36px 24px;
+          gap: 24px;
+        }
+        .cta-vendeur > div:last-child {
+          align-items: center; /* centrer le bouton */
+        }
+
+        /* ── SCENES desktop : hors usage sur mobile
+           (sécurité au cas où GSAP charge quand même) ── */
+        .scene {
+          display: none !important;
+        }
+
+        /* ── QUARTIERS : chips légèrement plus petits ── */
+        .quartier-chip {
+          font-size: 0.78rem;
+          padding: 9px 16px;
+        }
+
+        /* ── FOOTER grille ── */
+        .footer-grid {
+          grid-template-columns: 1fr !important;
+          gap: 32px !important;
+        }
+      }
+
+      /* Petits téléphones (< 390px) */
+      @media (max-width: 390px) {
+        #mobile-hero .scene-title {
+          font-size: clamp(2.4rem, 12vw, 3.2rem);
+        }
+        #mobile-hero {
+          padding: 80px 20px 40px;
         }
       }
     </style>
@@ -535,9 +689,9 @@
 
     <!-- NAVBAR -->
     <nav class="navbar" id="navbar">
-      <a href="./index.html" class="navbar-logo">
-        <span class="logo-dot"></span> SOLE
-      </a>
+      <a href="./index.html" class="navbar-logo"
+        ><span class="logo-dot"></span> SOLE</a
+      >
       <ul class="navbar-links">
         <li><a href="./index.html" class="active">Accueil</a></li>
         <li><a href="./pages/boutiques.html">Boutiques</a></li>
@@ -571,14 +725,35 @@
       >
     </div>
 
-    <!-- CANVAS HERO -->
+    <!-- CANVAS HERO (desktop uniquement) -->
     <canvas id="hero-canvas"></canvas>
+    <canvas id="particles-canvas"></canvas>
 
-    <!-- SCROLL CONTAINER 600vh -->
+    <!-- HERO MOBILE STATIQUE (caché sur desktop via JS/CSS) -->
+    <div id="mobile-hero" style="display: none">
+      <div class="scene-badge">
+        <i class="ti ti-map-pin"></i> Abidjan, Côte d'Ivoire
+      </div>
+      <h1 class="scene-title">Find your<br /><em>next pair.</em></h1>
+      <p class="scene-sub">
+        Découvrez les meilleures boutiques de chaussures près de chez vous.
+        Contactez le propriétaire directement.
+      </p>
+      <span class="scene-line"></span>
+      <div class="scene-btns">
+        <a href="./pages/boutiques.html" class="btn btn-red btn-lg"
+          ><i class="ti ti-search"></i> Explorer les boutiques</a
+        >
+        <a href="#main-content" class="btn btn-glass btn-lg"
+          ><i class="ti ti-building-store"></i> Voir les boutiques</a
+        >
+      </div>
+    </div>
+
+    <!-- SCROLL CONTAINER 600vh (desktop uniquement) -->
     <div id="scroll-container" style="height: 600vh; position: relative">
       <div class="canvas-overlay"></div>
 
-      <!-- Section 1 — Accueil -->
       <div class="scene" id="scene-1">
         <div class="scene-content">
           <div class="scene-badge">
@@ -601,7 +776,6 @@
         </div>
       </div>
 
-      <!-- Section 2 — Concept -->
       <div class="scene" id="scene-2">
         <div class="scene-content scene-right">
           <div class="scene-badge"><i class="ti ti-shoe"></i> Concept</div>
@@ -614,7 +788,6 @@
         </div>
       </div>
 
-      <!-- Section 3 — Quartiers -->
       <div class="scene" id="scene-3">
         <div class="scene-content">
           <div class="scene-badge"><i class="ti ti-map"></i> Localisation</div>
@@ -630,7 +803,6 @@
         </div>
       </div>
 
-      <!-- Section 4 — Messages -->
       <div class="scene" id="scene-4">
         <div class="scene-content scene-right">
           <div class="scene-badge">
@@ -648,7 +820,6 @@
         </div>
       </div>
 
-      <!-- Section 5 — CTA final -->
       <div class="scene" id="scene-5">
         <div class="scene-content scene-center">
           <div class="scene-badge" style="margin: 0 auto 24px">
@@ -672,9 +843,8 @@
         </div>
       </div>
     </div>
-    <!-- /scroll-container -->
 
-    <!-- SCROLL HINT -->
+    <!-- SCROLL HINT (desktop uniquement) -->
     <div id="scroll-hint">
       <div class="scroll-hint-arrow"></div>
       <span class="scroll-hint-label">Défiler</span>
@@ -917,7 +1087,6 @@
         </div>
       </footer>
     </div>
-    <!-- /main-content -->
 
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -927,9 +1096,9 @@
     <script src="./js/main.js"></script>
     <script src="./js/scroll.js"></script>
     <script>
-      // ── Init GSAP scenes ──────────────────────────────
+      // ── Init GSAP scenes (desktop uniquement) ────────
       function initScenes() {
-        if (typeof gsap === "undefined") return;
+        if (typeof gsap === "undefined" || window.innerWidth <= 768) return;
         gsap.registerPlugin(ScrollTrigger);
         const container = document.getElementById("scroll-container");
         const totalH = container.offsetHeight - window.innerHeight;
@@ -1002,9 +1171,9 @@
             ? data
                 .map(
                   (q) => `
-            <button class="quartier-chip" onclick="window.location.href='./pages/boutiques.html?quartier=${encodeURIComponent(q)}'">
-              <i class="ti ti-map-pin"></i> ${q}
-            </button>`,
+              <button class="quartier-chip" onclick="window.location.href='./pages/boutiques.html?quartier=${encodeURIComponent(q)}'">
+                <i class="ti ti-map-pin"></i> ${q}
+              </button>`,
                 )
                 .join("")
             : '<p style="color:var(--txt3)">Aucun quartier disponible.</p>';
