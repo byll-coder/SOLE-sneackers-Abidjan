@@ -102,8 +102,9 @@ function renderStoreCard(store) {
 
   const noteStr = store.noteGlobale > 0 ? store.noteGlobale.toFixed(1) : "—";
 
+  // ✅ CORRIGÉ : chemin vers ../pages/boutique-detail.html + guillemet manquant
   return `
-    <article class="store-card rv" onclick="window.location.href=boutique-detail.html?id=${store._id}'">
+    <article class="store-card rv" onclick="window.location.href='../pages/boutique-detail.html?id=${store._id}'">
       ${
         store.coverImage
           ? `<img src="${store.coverImage}" class="store-card-cover" alt="${store.nom}" loading="lazy">`
@@ -131,7 +132,7 @@ function renderStoreCard(store) {
           ${statutHtml}
         </div>
         <div class="store-card-footer">
-          <a href="boutique-detail.html?id=${store._id}" class="btn btn-glass btn-sm" onclick="event.stopPropagation()">
+          <a href="../pages/boutique-detail.html?id=${store._id}" class="btn btn-glass btn-sm" onclick="event.stopPropagation()">
             <i class="ti ti-eye"></i> Voir
           </a>
           <button class="btn btn-red btn-sm" onclick="event.stopPropagation(); contacterStore('${store._id}', '${store.proprietaire?._id || store.proprietaire}')">
@@ -146,7 +147,8 @@ function renderStoreCard(store) {
 async function contacterStore(storeId, proprietaireId) {
   if (!Session.estConnecte()) {
     afficherToast("Connecte-toi pour envoyer un message", "error");
-    setTimeout(() => (window.location.href = "auth.html"), 1000);
+    // ✅ CORRIGÉ : chemin vers ../pages/auth.html
+    setTimeout(() => (window.location.href = "../pages/auth.html"), 1000);
     return;
   }
   try {
@@ -156,7 +158,8 @@ async function contacterStore(storeId, proprietaireId) {
       storeId,
     });
     hideLoading();
-    window.location.href = `message.html?conv=${data._id}`;
+    // ✅ CORRIGÉ : chemin vers ../pages/message.html
+    window.location.href = `../pages/message.html?conv=${data._id}`;
   } catch (err) {
     hideLoading();
     afficherToast(err.message, "error");

@@ -19,26 +19,28 @@ const Session = {
 
 // ── Redirection après connexion ───────────────────
 function redigerApresConnexion(user) {
+  // ✅ CORRIGÉ : les pages sont dans /pages/, le JS est dans /js/ → ../pages/
   const destination =
     user?.role === "seller"
-      ? "dashboard-vendeur.html"
-      : "dashboard-client.html";
-  window.location.replace(destination); // .replace() stoppe le saut de page
+      ? "../pages/dashboard-vendeur.html"
+      : "../pages/dashboard-client.html";
+  window.location.replace(destination);
 }
 
 // ── Protéger une page ─────────────────────────────
 function protegerPage(roleRequis = null) {
   if (!Session.estConnecte()) {
-    window.location.replace("auth.html?mode=connexion");
+    // ✅ CORRIGÉ : chemin vers ../pages/auth.html
+    window.location.replace("../pages/auth.html?mode=connexion");
     return false;
   }
   if (roleRequis) {
     const user = Session.getUser();
-    // ✅ Normalisation : trim + lowercase pour éviter "Customer" ≠ "customer"
     const role = (user?.role || "").toLowerCase().trim();
     const requis = roleRequis.toLowerCase().trim();
     if (role !== requis) {
-      window.location.replace("index.html");
+      // ✅ CORRIGÉ : index.html est à la racine → ../index.html
+      window.location.replace("../index.html");
       return false;
     }
   }
@@ -52,12 +54,13 @@ function majNavbar() {
   if (!actionsEl) return;
 
   if (user && Session.estConnecte()) {
+    // ✅ CORRIGÉ : chemins dashboard et message
     const dash =
       user.role === "seller"
-        ? "dashboard-vendeur.html"
-        : "dashboard-client.html";
+        ? "../pages/dashboard-vendeur.html"
+        : "../pages/dashboard-client.html";
     actionsEl.innerHTML = `
-      <a href="message.html" class="btn btn-icon btn-glass" id="msg-btn" title="Messages">
+      <a href="../pages/message.html" class="btn btn-icon btn-glass" id="msg-btn" title="Messages">
         <i class="ti ti-message-circle"></i>
         <span class="notif-badge" id="notif-msg" style="display:none;"></span>
       </a>
@@ -68,16 +71,16 @@ function majNavbar() {
         <i class="ti ti-logout"></i>
       </button>`;
 
-    // On appelle chargerNonLus seulement si Messages existe
     if (typeof Messages !== "undefined" && Messages.nonLus) {
       chargerNonLus();
     }
   } else {
+    // ✅ CORRIGÉ : chemins auth.html
     actionsEl.innerHTML = `
-      <a href="auth.html?mode=connexion" class="btn btn-outline btn-sm">
+      <a href="../pages/auth.html?mode=connexion" class="btn btn-outline btn-sm">
         <i class="ti ti-login"></i> Connexion
       </a>
-      <a href="auth.html?mode=inscription" class="btn btn-red btn-sm">
+      <a href="../pages/auth.html?mode=inscription" class="btn btn-red btn-sm">
         <i class="ti ti-user-plus"></i> S'inscrire
       </a>`;
   }
@@ -102,7 +105,8 @@ async function chargerNonLus() {
 // ── Déconnexion ───────────────────────────────────
 function deconnexion() {
   Session.clear();
-  window.location.replace("index.html");
+  // ✅ CORRIGÉ : index.html est à la racine → ../index.html
+  window.location.replace("../index.html");
 }
 
 // ── Toast ─────────────────────────────────────────
