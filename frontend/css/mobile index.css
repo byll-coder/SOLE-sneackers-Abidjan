@@ -1,0 +1,201 @@
+/* ═══════════════════════════════════════════════════════════════
+   SOLE — RESPONSIVE INDEX (index.html uniquement)
+   Contient UNIQUEMENT les styles spécifiques à index.html.
+   Nécessite mobile-global.css chargé avant.
+
+   Dans index.html :
+     <link rel="stylesheet" href="./css/mobile-global.css" />
+     <link rel="stylesheet" href="./css/mobile-index.css" />
+     <script src="./js/mobile-menu.js"></script>
+   ═══════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────
+   1. HERO SCENES — layout & typographie mobile
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .scene {
+    padding: 80px 5% 0;
+    align-items: flex-start;
+  }
+
+  .scene-content {
+    max-width: 100%;
+  }
+
+  /* Annuler le décalage à droite sur mobile */
+  .scene-right {
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .scene-title {
+    font-size: clamp(2.8rem, 12vw, 5rem);
+  }
+
+  .scene-badge {
+    font-size: 0.65rem;
+    padding: 4px 10px;
+  }
+
+  .scene-sub {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
+  /* Boutons en colonne pleine largeur */
+  .scene-btns {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .scene-btns .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   2. SCROLL CONTAINER — plus lent sur mobile
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #scroll-container {
+    height: 900vh !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   3. SCROLL HINT — repositionné
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #scroll-hint {
+    bottom: 20px;
+  }
+
+  .scroll-hint-arrow {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   4. HERO SEARCH BAR — colonne sur mobile
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero-search-wrap {
+    padding: 36px 0;
+  }
+
+  .hero-search-box {
+    flex-direction: column;
+    padding: 14px 16px;
+    border-radius: 12px;
+    gap: 10px;
+  }
+
+  .hero-search-box input {
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  .hero-search-box select {
+    width: 100%;
+    padding: 8px 0;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--glass-bd);
+    outline: none;
+    color: var(--txt2);
+  }
+
+  .search-divider {
+    display: none;
+  }
+
+  .hero-search-box .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   5. STATS BAR — 2 colonnes sur mobile
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .stats-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat-item {
+    border-bottom: 1px solid var(--glass-bd);
+  }
+
+  .stat-item:nth-child(3),
+  .stat-item:nth-child(4) {
+    border-bottom: none;
+  }
+
+  .stat-num {
+    font-size: 1.8rem;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   6. QUARTIERS CHIPS — scroll horizontal fluide
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .quartiers-scroll {
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .quartier-chip {
+    font-size: 0.78rem;
+    padding: 8px 16px;
+    white-space: nowrap;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   7. CTA VENDEUR — centré, bouton pleine largeur
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .cta-vendeur {
+    padding: 36px 24px;
+    text-align: center;
+  }
+
+  .cta-vendeur > div:last-child {
+    align-items: center;
+  }
+
+  .cta-vendeur .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   8. STEPS GRID — 1 colonne sur mobile
+   ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-card {
+    padding: 24px 20px;
+  }
+}
