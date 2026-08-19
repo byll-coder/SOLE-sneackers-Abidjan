@@ -188,6 +188,69 @@
         height: 100%;
       }
 
+      /* ── CHAT HEADER (visible sur mobile uniquement) ── */
+      .chat-header-mobile {
+        display: none;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: var(--dark);
+        border-bottom: 1px solid var(--glass-bd);
+        flex-shrink: 0;
+      }
+      .chat-header-back {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--glass);
+        border: 1px solid var(--glass-bd);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--white);
+        flex-shrink: 0;
+        transition: background 0.15s;
+      }
+      .chat-header-back:hover {
+        background: var(--dark3);
+      }
+      .chat-header-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .chat-header-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--white);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .chat-header-sub {
+        font-size: 0.72rem;
+        color: var(--txt3);
+      }
+      .chat-header-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: var(--dark3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--white);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .chat-header-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
       .chat-messages {
         flex: 1;
         overflow-y: auto;
@@ -370,7 +433,11 @@
         font-weight: 300;
       }
 
-      /* ── MOBILE ── */
+      /* ══════════════════════════════════════════
+         MOBILE — Navigation style WhatsApp
+         On cache la navbar globale sur mobile
+         quand le chat est ouvert
+      ══════════════════════════════════════════ */
       @media (max-width: 768px) {
         html,
         body {
@@ -378,27 +445,78 @@
           overflow: hidden;
         }
 
+        /* Layout : une seule colonne plein écran */
         .msg-layout {
           grid-template-columns: 1fr;
-          grid-template-rows: auto 1fr;
-          height: calc(
-            100dvh - 70px
-          ); /* dvh = dynamic viewport height, gère le clavier virtuel */
+          height: 100dvh;
+          margin-top: 0;
         }
+
+        /* Cache la navbar globale sur mobile (on a notre propre header in-chat) */
+        #navbar,
+        .mobile-menu {
+          display: none !important;
+        }
+
+        /* ── VUE LISTE (état par défaut sur mobile) ── */
         .conv-sidebar {
-          max-height: 240px;
+          position: fixed;
+          inset: 0;
+          z-index: 10;
+          max-height: 100dvh;
           border-right: none;
-          border-bottom: 1px solid var(--glass-bd);
+          transform: translateX(0);
+          transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        /* Header de la sidebar sur mobile : titre + back vers le site */
+        .conv-sidebar-header {
+          padding-top: 52px; /* espace pour l'encoche / barre de statut */
+        }
+        .conv-sidebar-title {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .conv-sidebar-title::before {
+          content: "";
+          display: block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--red);
+          flex-shrink: 0;
+        }
+
+        /* ── VUE CHAT (masquée par défaut sur mobile) ── */
         .chat-zone {
-          /* prend le reste de l'espace dispo naturellement dans la grid */
-          min-height: 0;
+          position: fixed;
+          inset: 0;
+          z-index: 20;
+          transform: translateX(100%);
+          transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* Quand une conv est ouverte :
+           - sidebar glisse vers la gauche (hors écran)
+           - chat glisse en position (plein écran) */
+        body.chat-ouvert .conv-sidebar {
+          transform: translateX(-100%);
+        }
+        body.chat-ouvert .chat-zone {
+          transform: translateX(0);
+        }
+
+        /* Header de chat mobile visible */
+        .chat-header-mobile {
+          display: flex;
+          padding-top: max(12px, env(safe-area-inset-top));
+        }
+
         .chat-messages {
           padding: 16px;
         }
         .chat-input-zone {
-          padding: 12px 16px;
+          padding: 10px 16px max(10px, env(safe-area-inset-bottom));
         }
         .msg-group {
           max-width: 88%;
@@ -494,8 +612,25 @@
       let convActuelle = null;
       let toutesConversations = [];
       let typingTimer = null;
-      // ✅ Garde trace des IDs de messages envoyés par nous pour ignorer l'écho socket
       const messagesEnvoyesParMoi = new Set();
+
+      // ── Détection mobile ──────────────────────────────
+      const isMobile = () => window.innerWidth <= 768;
+
+      // ── Ouvrir vue chat sur mobile ────────────────────
+      function ouvrirVueChat() {
+        if (isMobile()) document.body.classList.add("chat-ouvert");
+      }
+
+      // ── Retour vers la liste sur mobile ──────────────
+      function revenirListe() {
+        document.body.classList.remove("chat-ouvert");
+        convActuelle = null;
+        // Désactiver tous les items
+        document
+          .querySelectorAll(".conv-item")
+          .forEach((el) => el.classList.remove("active"));
+      }
 
       // ── Init Socket.IO ────────────────────────────────
       function initSocket() {
@@ -513,18 +648,14 @@
         });
 
         socket.on("message:receive", (message) => {
-          // ✅ CORRECTION BUG 1 : ignorer l'écho de nos propres messages
           if (messagesEnvoyesParMoi.has(message._id)) {
             messagesEnvoyesParMoi.delete(message._id);
             return;
           }
-
           if (convActuelle && message.conversation === convActuelle) {
             appendMessage(message, false);
             scrollToBottom();
           }
-
-          // ✅ CORRECTION BUG 1 : refresh sidebar SANS reconstruire la chat-zone
           rafraichirSidebar();
         });
 
@@ -539,14 +670,13 @@
         });
       }
 
-      // ── Charger les conversations (init seulement) ────
+      // ── Charger les conversations ─────────────────────
       async function chargerConversations() {
         try {
           const { data } = await Messages.conversations();
           toutesConversations = data;
           renderConversations(data);
 
-          // ✅ CORRECTION BUG 1 : ouvrir depuis URL une seule fois au chargement initial
           const convParam = new URLSearchParams(window.location.search).get(
             "conv",
           );
@@ -558,21 +688,19 @@
         }
       }
 
-      // ✅ NOUVEAU : refresh sidebar seul, sans toucher à la chat-zone
       async function rafraichirSidebar() {
         try {
           const { data } = await Messages.conversations();
           toutesConversations = data;
-          // Garder le filtre de recherche actif si besoin
           const q =
             document.getElementById("search-conv")?.value?.toLowerCase() || "";
           if (q) {
-            const filtrées = data.filter((c) => {
-              const user = Session.getUser();
-              return c.participants
+            const user = Session.getUser();
+            const filtrées = data.filter((c) =>
+              c.participants
                 .filter((p) => p._id !== user?._id)
-                .some((p) => p.nom.toLowerCase().includes(q));
-            });
+                .some((p) => p.nom.toLowerCase().includes(q)),
+            );
             renderConversations(filtrées);
           } else {
             renderConversations(data);
@@ -634,8 +762,11 @@
 
       // ── Ouvrir une conversation ───────────────────────
       async function ouvrirConversation(convId) {
-        // ✅ CORRECTION BUG 1 : si on clique sur la même conv déjà ouverte, ne rien faire
-        if (convId === convActuelle) return;
+        if (convId === convActuelle) {
+          // Sur mobile : si même conv, juste réafficher le chat
+          if (isMobile()) ouvrirVueChat();
+          return;
+        }
         convActuelle = convId;
 
         document.querySelectorAll(".conv-item").forEach((el) => {
@@ -644,6 +775,9 @@
 
         if (socket) socket.emit("conversation:join", convId);
 
+        // Sur mobile : glisser vers la vue chat
+        ouvrirVueChat();
+
         try {
           const { data: msgs } = await Messages.getMessages(convId);
           const conv = toutesConversations.find((c) => c._id === convId);
@@ -651,9 +785,24 @@
           const autre =
             conv?.participants.find((p) => p._id !== user._id) ||
             conv?.participants[0];
+          const initiale = (autre?.nom || "?")[0].toUpperCase();
 
           const chatZone = document.getElementById("chat-zone");
           chatZone.innerHTML = `
+          <!-- Header mobile avec bouton retour -->
+          <div class="chat-header-mobile">
+            <button class="chat-header-back" onclick="revenirListe()" aria-label="Retour">
+              <i class="ti ti-arrow-left"></i>
+            </button>
+            <div class="chat-header-avatar">
+              ${autre?.avatar ? `<img src="${autre.avatar}" alt="${autre?.nom}">` : initiale}
+            </div>
+            <div class="chat-header-info">
+              <div class="chat-header-name">${autre?.nom || "Utilisateur"}</div>
+              <div class="chat-header-sub">En ligne</div>
+            </div>
+          </div>
+
           <div class="chat-messages" id="chat-messages">
             ${
               msgs.length
@@ -667,13 +816,13 @@
                     )
                     .join("")
                 : `<div style="text-align:center;padding:40px;color:var(--txt3);">
-                  <i class="ti ti-message-circle" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
-                  Début de la conversation
-                 </div>`
+                    <i class="ti ti-message-circle" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
+                    Début de la conversation
+                   </div>`
             }
             <div id="typing-el" style="display:none;">
               <div class="msg-group">
-                <div class="msg-avatar">${(autre?.nom || "?")[0].toUpperCase()}</div>
+                <div class="msg-avatar">${initiale}</div>
                 <div class="typing-indicator">
                   <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
                 </div>
@@ -694,8 +843,6 @@
 
           scrollToBottom();
           document.getElementById("msg-input").focus();
-
-          // ✅ Refresh sidebar (non-lus mis à zéro) SANS reconstruire la chat-zone
           rafraichirSidebar();
         } catch (err) {
           afficherToast(err.message, "error");
@@ -737,17 +884,15 @@
         const contenu = input.value.trim();
         if (!contenu) return;
 
-        // ✅ CORRECTION BUG 1 : vider l'input APRES lecture, pas avant
         const btn = document.getElementById("btn-send");
         if (btn) btn.disabled = true;
-        input.value = ""; // On vide l'input maintenant que le contenu est capturé
+        input.value = "";
 
         try {
           const { data: msg } = await Messages.envoyerMessage(convActuelle, {
             contenu,
           });
 
-          // ✅ Marquer l'ID de ce message pour ignorer l'écho socket
           if (msg._id) messagesEnvoyesParMoi.add(msg._id);
 
           appendMessage(msg, true);
@@ -761,10 +906,8 @@
             socket.emit("typing:stop", { conversationId: convActuelle });
           }
 
-          // ✅ Refresh UNIQUEMENT la sidebar, pas toute la page
           rafraichirSidebar();
         } catch (err) {
-          // ✅ En cas d'erreur, remettre le contenu dans l'input pour ne pas le perdre
           input.value = contenu;
           afficherToast(err.message, "error");
         } finally {
@@ -791,6 +934,13 @@
         const el = document.getElementById("chat-messages");
         if (el) el.scrollTop = el.scrollHeight;
       }
+
+      // ── Gestion bouton "Retour" natif navigateur sur mobile ──
+      window.addEventListener("popstate", () => {
+        if (isMobile() && document.body.classList.contains("chat-ouvert")) {
+          revenirListe();
+        }
+      });
 
       document.addEventListener("DOMContentLoaded", () => {
         if (!protegerPage()) return;
