@@ -6,6 +6,7 @@
     <title>SOLE — Trouvez votre magasin de chaussures</title>
     <link rel="icon" type="image/svg+xml" href="./logo/logo.jpeg" />
     <link rel="alternate icon" href="./logo/logo.jpeg" />
+
     <link rel="stylesheet" href="./css/styles.css" />
     <style>
       /* ── LOADER ── */
@@ -237,7 +238,7 @@
         }
       }
 
-      /* ── MAIN CONTENT ── */
+      /* ── MAIN CONTENT (après scroll zone) ── */
       #main-content {
         position: relative;
         z-index: 5;
@@ -306,7 +307,6 @@
       }
       .hero-search-box input {
         flex: 1;
-        min-width: 0;
         background: none;
         border: none;
         outline: none;
@@ -323,7 +323,6 @@
         height: 32px;
         background: var(--glass-bd);
         margin: 0 16px;
-        flex-shrink: 0;
       }
       .hero-search-box select {
         background: none;
@@ -334,7 +333,6 @@
         font-size: 0.9rem;
         cursor: pointer;
         width: 180px;
-        flex-shrink: 0;
       }
       .hero-search-box select option {
         background: var(--dark2);
@@ -373,7 +371,7 @@
         color: var(--red);
       }
 
-      /* ── COMMENT ÇA MARCHE ── */
+      /* ── COMMENT CA MARCHE ── */
       .steps-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -488,167 +486,28 @@
           transform: translateY(0);
         }
       }
-
-      /* ══════════════════════════════════════════
-         MOBILE — corrections uniquement,
-         l'animation et la structure restent intactes
-      ══════════════════════════════════════════ */
       @media (max-width: 768px) {
-        /* ── SCENES : padding latéral confortable ── */
-        .scene {
-          padding: 0 6%;
-          align-items: flex-end; /* coller en bas pour éviter la navbar */
-          padding-bottom: 100px;
-        }
-
-        /* ── scene-right : pas de décalage auto sur petit écran ── */
-        .scene-right {
-          margin-left: 0;
-        }
-
-        /* ── Titres : taille adaptée pour ne pas déborder ── */
-        .scene-title {
-          font-size: clamp(2.6rem, 12vw, 4rem);
-          margin-bottom: 14px;
-        }
-
-        /* ── Sous-titre : plus compact ── */
-        .scene-sub {
-          font-size: 0.9rem;
-          margin-bottom: 22px;
-          max-width: 100%;
-        }
-
-        /* ── Boutons : colonne pleine largeur ── */
-        .scene-btns {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 10px;
-        }
-        .scene-btns .btn {
-          text-align: center;
-          justify-content: center;
-        }
-        .scene-center .scene-btns {
-          align-items: center;
-        }
-
-        /* ── Badge : légèrement plus petit ── */
-        .scene-badge {
-          font-size: 0.66rem;
-          padding: 4px 12px;
-          margin-bottom: 16px;
-        }
-
-        /* ── Scroll hint : décaler vers le haut sur mobile ── */
-        #scroll-hint {
-          bottom: 20px;
-        }
-
-        /* ── STATS BAR : grille 2×2 propre ── */
         .stats-inner {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: 1fr 1fr;
         }
-        .stat-item {
-          padding: 14px 0;
-        }
-        /* Bordure basse entre les 2 rangées */
-        .stat-item:nth-child(1),
-        .stat-item:nth-child(2) {
-          border-bottom: 1px solid var(--glass-bd);
-        }
-        /* Supprimer border-right en fin de ligne */
-        .stat-item:nth-child(2),
-        .stat-item:nth-child(4) {
-          border-right: none;
-        }
-        .stat-num {
-          font-size: 2rem;
-        }
-        .stat-lbl {
-          font-size: 0.65rem;
-          letter-spacing: 0.1em;
-        }
-
-        /* ── SEARCH BOX : colonne propre ── */
-        .hero-search-wrap {
-          padding: 36px 0;
-        }
-        .hero-search-box {
-          flex-direction: column;
-          align-items: stretch;
-          padding: 14px;
-          border-radius: var(--r);
-          gap: 10px;
-        }
-        .hero-search-box i {
-          display: none;
-        }
-        .hero-search-box input {
-          background: var(--dark3);
-          border: 1px solid var(--glass-bd);
-          border-radius: var(--r);
-          padding: 12px 14px;
-          width: 100%;
-          box-sizing: border-box;
-        }
-        .search-divider {
-          display: none;
-        }
-        .hero-search-box select {
-          width: 100%;
-          background: var(--dark3);
-          border: 1px solid var(--glass-bd);
-          border-radius: var(--r);
-          padding: 12px 14px;
-          color: var(--txt2);
-        }
-        .hero-search-box .btn {
-          width: 100%;
-          justify-content: center;
-          padding: 12px;
-        }
-
-        /* ── STEPS : colonne unique ── */
         .steps-grid {
           grid-template-columns: 1fr;
-          gap: 16px;
         }
-        .step-card {
-          padding: 24px 20px;
-        }
-
-        /* ── CTA VENDEUR : colonne, tout centré ── */
         .cta-vendeur {
           grid-template-columns: 1fr;
           text-align: center;
-          padding: 36px 24px;
-          gap: 24px;
-        }
-        .cta-vendeur > div:last-child {
-          align-items: center;
-        }
-
-        /* ── QUARTIERS : chips un peu plus petits ── */
-        .quartier-chip {
-          font-size: 0.78rem;
-          padding: 9px 16px;
-        }
-
-        /* ── FOOTER : colonne unique ── */
-        .footer-grid {
-          grid-template-columns: 1fr !important;
-          gap: 32px !important;
-        }
-      }
-
-      /* Très petits écrans (< 380px) */
-      @media (max-width: 380px) {
-        .scene-title {
-          font-size: clamp(2.2rem, 11vw, 3rem);
+          padding: 40px 28px;
         }
         .scene {
-          padding-bottom: 80px;
+          padding: 0 5%;
+        }
+        .hero-search-box {
+          flex-direction: column;
+          padding: 16px;
+          border-radius: var(--r);
+        }
+        .search-divider {
+          display: none;
         }
       }
     </style>
@@ -676,9 +535,9 @@
 
     <!-- NAVBAR -->
     <nav class="navbar" id="navbar">
-      <a href="./index.html" class="navbar-logo"
-        ><span class="logo-dot"></span> SOLE</a
-      >
+      <a href="./index.html" class="navbar-logo">
+        <span class="logo-dot"></span> SOLE
+      </a>
       <ul class="navbar-links">
         <li><a href="./index.html" class="active">Accueil</a></li>
         <li><a href="./pages/boutiques.html">Boutiques</a></li>
@@ -714,7 +573,6 @@
 
     <!-- CANVAS HERO -->
     <canvas id="hero-canvas"></canvas>
-    <canvas id="particles-canvas"></canvas>
 
     <!-- SCROLL CONTAINER 600vh -->
     <div id="scroll-container" style="height: 600vh; position: relative">
@@ -814,6 +672,7 @@
         </div>
       </div>
     </div>
+    <!-- /scroll-container -->
 
     <!-- SCROLL HINT -->
     <div id="scroll-hint">
@@ -1058,6 +917,7 @@
         </div>
       </footer>
     </div>
+    <!-- /main-content -->
 
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -1129,23 +989,26 @@
           const { data } = await Stores.quartiers();
           const select = document.getElementById("quartier-select");
           const grid = document.getElementById("quartiers-grid");
+
           data.forEach((q) => {
             select.insertAdjacentHTML(
               "beforeend",
               `<option value="${q}">${q}</option>`,
             );
           });
+
           document.getElementById("stat-quartiers").textContent = data.length;
           grid.innerHTML = data.length
             ? data
                 .map(
                   (q) => `
-                <button class="quartier-chip" onclick="window.location.href='./pages/boutiques.html?quartier=${encodeURIComponent(q)}'">
-                  <i class="ti ti-map-pin"></i> ${q}
-                </button>`,
+            <button class="quartier-chip" onclick="window.location.href='./pages/boutiques.html?quartier=${encodeURIComponent(q)}'">
+              <i class="ti ti-map-pin"></i> ${q}
+            </button>`,
                 )
                 .join("")
             : '<p style="color:var(--txt3)">Aucun quartier disponible.</p>';
+
           grid.querySelectorAll(".rv").forEach((el) => rvObs.observe(el));
         } catch {}
       }
